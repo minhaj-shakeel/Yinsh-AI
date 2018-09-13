@@ -18,7 +18,13 @@ public:
 
 	void place_ring(player,int x, int y);
 
-	void move_ring(r_no, int x, int y);
+	void move_ring(player, int x1, int y1, int x2, int y2);
+
+	void remove_row(int x1, int y1, int x2, int y2);
+
+	void remove_ring(player, int x, int y);
+
+	bool isEmpty(int x, int y);
 
 
 }
