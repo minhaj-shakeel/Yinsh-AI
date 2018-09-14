@@ -28,6 +28,32 @@ move<point,point> player::generate_move(int id , board b)
 string generate_ring_place(int id , board b)
 {
 	//iterate to all the positions 
+	vector<pair<int,int> > positions ;
+	pair middle ;
+	middle.x = 0;
+	middle.y = 0;
+	
+	int position
+	if (board::isEmpty(0,0))
+	{
+		positions.push_back(middle);
+	}
+	for(int i = 1 ; i < 5 ; i++ )
+	{
+		int hexagon = i;
+		for (int j = 0 ; j < 6*i < j ++)
+		{
+			int position = j ;
+			pair<int, int> current =  board::convert(hexagon,position);
+			if (isEmpty(current.x,current.y)== true)
+			{
+				positions.push_back(current);
+			}
+		}
+	}
+	pair
+
+
 }
 
 
