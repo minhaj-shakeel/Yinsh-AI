@@ -20,16 +20,66 @@ std::vector<std::string> split(const std::string& s, char delimiter)
 }
 vector<move<point,point> > generate_neighbour(int id )
 {
-	//starting point should be ring
-	//traverse in 6 directions
-	//stop if ring comes
-	//stop if marker sequence ends
-	//stop if out of the board
-}
-move<point,point> player::generate_move(int id , board b)
-{
+	int direction_x[] = {0,0,1,-1,1,-1};
+	int direction_y[] = {1,-1,0,0,1,-1};
 
-} 
+	vector<move<point,point> > neighbours ;
+
+	//starting point should be ring
+	for (int i = 0 ; i < 5 ; i++)
+	{
+		//take a ring point and 
+		pair<int , int > starting ;
+		if (id == 1)
+		{
+			starting = ring_p1.at(i);
+		}
+		else
+		{
+			starting = ring_p2.at(i);
+		}
+		move<point,point> new_move ;  
+		new_move.start = starting ;
+		//check it is a valid ring ?
+		if (board::validRing(current)==true) //validring function tellls validity of rings
+		{
+			//then generate termination points
+
+			//traverse in 6 directions
+			for(int j = 0 ; j < 6 ; j++)
+			{
+				int marker_crossed = 0; // signifying marker has crossed or not 
+				int new_x = starting.x + direction_x[j];
+				int new_y = starting.y + direction_y[j];
+				while(board::isValid(new_x,new_y)==true)
+				{
+					pair<int,int> current ;
+					current.x = new_x ;
+					current.y = new_y ;
+					if (isEmpty(new_x , new_y) == true )
+					{
+						new_move.end = current ;
+						neighbours.push_back(new_move);
+						if (marker_crossed == 1)
+							break ;
+
+					}
+					if (board::value(new_x,new_y) == 3 | board::value(new_x,new_y) == 4 ) 
+						break;
+					else if (board::value(new_x,new_y) == 0 | board::value(new_x,new_y) == 1 ) //gives value stored at that point
+					{
+
+					}
+					new_x += direction_x[j];
+					new_y += direction_y[j];
+				}
+
+			}
+
+		}
+	}
+	return neighbours ;
+}
 
 
 string generate_ring_place(int id , board b)
@@ -45,10 +95,10 @@ string generate_ring_place(int id , board b)
 	{
 		positions.push_back(middle);
 	}
-	for(int i = 1 ; i < 5 ; i++ )
+	for(int i = 1 ; i <= 5 ; i++ )
 	{
 		int hexagon = i;
-		for (int j = 0 ; j < 6*i < j ++)
+		for (int j = 0 ; j < 6*i < j++)
 		{
 			int position = j ;
 			pair<int, int> current =  board::convert(hexagon,position);
@@ -58,8 +108,16 @@ string generate_ring_place(int id , board b)
 			}
 		}
 	}
-	pair
+	pair<int , int> best = board::best_ring_place(positions);
+	pair<int , int> hexa = board::to_hexagon(best.x,best.y); 
+	//to_hexagon converts coordinates in hexagoal format ;
 
+	//generating string format of move ;
+	string  final = "P " ;
+	final.append(to_string(hexa.x));
+	final.append(" ");
+	final.append(to_string(hexa.y));
+	return final;
 
 }
 
