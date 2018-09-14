@@ -37,6 +37,11 @@ public:
 	int value(int x, int y);
 
 	bool isValid(int x, int y);
+
+
+	// returns vector of all possible row to be removed for both the players
+	// player1 in v[0] and player2 in v[1]
+	vector< std::vector<pair<pii,pii> > > find_row();
 	//gives best ring position to place 
 
 

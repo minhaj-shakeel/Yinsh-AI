@@ -64,9 +64,9 @@ vector<move<point,point> > generate_neighbour(int id )
 							break ;
 
 					}
-					if (board::value(new_x,new_y) == 3 | board::value(new_x,new_y) == 4 ) 
+					if (board::value(new_x,new_y) == 3 || board::value(new_x,new_y) == 4 ) 
 						break;
-					else if (board::value(new_x,new_y) == 0 | board::value(new_x,new_y) == 1 ) //gives value stored at that point
+					else if (board::value(new_x,new_y) == 0 || board::value(new_x,new_y) == 1 ) //gives value stored at that point
 					{
 
 					}

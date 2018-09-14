@@ -88,11 +88,11 @@ void board::place_ring(player, int x, int y)
 {
 	if(player == 1){
 		ring_p1.pb({x,y});
-		points[y+5][x+5] = 3;
+		points[x+5][y+5] = 3;
 	}
 	else{
 		ring_p2.pb({x,y});
-		points[y+5][x+5] = 4;
+		points[x+5][y+5] = 4;
 	}
 }
 
@@ -121,8 +121,8 @@ void board::move_ring(player, int x1, int y1, int x2, int y2)
 				ring_p1[i].S = y2;
 			}
 		}
-		points[y1+5][x1+5] = 0;
-		points[y2+5][x2+5] = 3;
+		points[x1+5][y1+5] = 0;
+		points[x2+5][y2+5] = 3;
 	}
 	else{
 		for(int i=0;i<5;i++){
@@ -131,8 +131,8 @@ void board::move_ring(player, int x1, int y1, int x2, int y2)
 				ring_p2[i].S = y2;
 			}
 		}
-		points[y1+5][x1+5] = 1;
-		points[y2+5][x2+5] = 4;
+		points[x1+5][y1+5] = 1;
+		points[x2+5][y2+5] = 4;
 	}
 
 	int a = move_index(x1,y1,x2,y2);
@@ -140,12 +140,12 @@ void board::move_ring(player, int x1, int y1, int x2, int y2)
 	int s1 = x1; int e1 = y1;
 	s1+= hor[a]; e1+= ver[a];
 	while(s1!=x2 || e1!=y2){
-		if(points[e1+5][s1+5]==-1){
+		if(points[s1+5][e1+5]==-1){
 			s1+= hor[a]; e1+= ver[a];
 			continue;
 		}
 		else{
-			points[e1+5][s1+5] = 1-points[e1+5][s1+5];
+			points[s1+5][e1+5] = 1-points[s1+5][e1+5];
 			s1+= hor[a]; e1+= ver[a];
 		}
 	}
@@ -158,20 +158,20 @@ void board::remove_row(int x1, int y1, int x2, int y2)
 {
 	int a = move_index(x1,y1,x2,y2);
 
-	points[y1+5][x1+5] = -1;
-	points[y2+5][x2+5] = -1;
+	points[x1+5][y1+5] = -1;
+	points[x2+5][y2+5] = -1;
 
 	int s1 = x1; int e1 = y1;
 	s1+= hor[a]; e1+= ver[a];
 	while(s1!=x2 || e1!=y2){
-		points[e1+5][s1+5] = -1;
+		points[s1+5][e1+5] = -1;
 		s1+= hor[a]; e1+= ver[a];
 	}
 }
 
 void board::remove_ring(player, int x, int y)
 {
-	points[y+5][x+5] = -1;
+	points[x+5][y+5] = -1;
 	if(player==1){
 		for(int i=0;i<5;i++){
 			if(ring_p1[i].F==x1 && ring_p1[i].S==y1){
@@ -193,7 +193,7 @@ void board::remove_ring(player, int x, int y)
 
 bool board::isEmpty(int x, int y)
 {
-	if(points[y][x]==-1) return true;
+	if(points[x+5][y+5]==-1) return true;
 	else return false;
 }
 
@@ -204,15 +204,66 @@ pii board::convert(int hexagon , int position)
 
 int board::value(int x, int y)
 {
-	return points[y+5][x+5];
+	return points[x+5][y+5];
 }
 
 bool board::isValid(int x, int y)
 {
 	int i = x+5; int j = y+5;
 	if(i<0 || j<0 || i>10 || j>10) return false;
-	if(points[y+5][x+5]==10) return false;
+	if(points[i][j]==10) return false;
 	else return true;
 }
-// insert in format y,x as points[2][1] -> 1,2
+
+vector< std::vector<pair<pii,pii> > > board::find_row()
+{
+	std::vector<pair<pii,pii> > v1;
+	std::vector<pair<pii,pii> > v2;
+	std::vector< std::vector<pair<pii,pii> > > ans;
+	ans.pb(v1);ans.pb(v2);
+
+	int newx,newy;
+	// v1 has player1 rows and v2 has player2 rows
+	for(int i=0;i<=10;i++){
+		for(int j=0;j<=10;j++){
+			if(points[i][j]==10) continue;
+			// i is x and j is y
+			newx = i;newy=j;
+			if(points[i][j]==0){
+				for(int a=0;a<=4;a+=2){
+					int rc=1;
+					for(int count=1;count<=4;count++){
+						newx+= hor[a];newy+= ver[a];
+						if(isValid(newx,newy)){
+							if(points[newx][newy]==0) rc++;
+						}
+					}
+					if(rc==5){
+							ans[0].pb({{i,j},{newx,newy}})
+					}
+				}
+			}
+			else if(points[i][j]==1){
+				for(int a=0;a<=4;a+=2){
+					int rc=1;
+					for(int count=1;count<=4;count++){
+						newx+= hor[a];newy+= ver[a];
+						if(isValid(newx,newy)){
+							if(points[newx][newy]==1) rc++;
+						}
+					}
+					if(rc==5){
+							ans[1].pb({{i,j},{newx,newy}})
+					}
+				}
+
+			}
+		}
+	}
+
+	return ans;
+}
+
+
+// insert in format x,y as points[1][2] -> 1,2
 
