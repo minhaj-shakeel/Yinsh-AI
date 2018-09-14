@@ -3,6 +3,10 @@
 
 #include <vector>
 #include <utility>
+#define pb push_back
+#define F first
+#define S second
+#define pii pair<int,int>
 using namespace std;
 
 class board
@@ -26,9 +30,9 @@ public:
 
 	bool isEmpty(int x, int y);
 
-	pair<int , int> convert(int hexagon , int position);
+	pii convert(int hexagon , int position);
 
-	pair<int , int> best_ring_place(vector<pair<int,int>> positions);
+	pii best_ring_place(vector<pair<int,int>> positions);
 	//gives best ring position to place 
 
 
