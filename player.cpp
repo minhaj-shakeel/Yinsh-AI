@@ -1,5 +1,12 @@
 #include "player.h"
 #include <bits/stdc++.h>
+
+#define pb push_back
+#define F first
+#define S second
+using namespace std;
+
+
 std::vector<std::string> split(const std::string& s, char delimiter)
 {
    std::vector<std::string> tokens;
