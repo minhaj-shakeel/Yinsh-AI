@@ -26,5 +26,10 @@ public:
 
 	bool isEmpty(int x, int y);
 
+	pair<int , int> convert(int hexagon , int position);
+
+	pair<int , int> best_ring_place(vector<pair<int,int>> positions);
+	//gives best ring position to place 
+
 
 }
