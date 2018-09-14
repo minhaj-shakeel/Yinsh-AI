@@ -201,5 +201,18 @@ pii board::convert(int hexagon , int position)
 {
 	return hex_to_2d[{hexagon,position}];
 }
+
+int board::value(int x, int y)
+{
+	return points[y+5][x+5];
+}
+
+bool board::isValid(int x, int y)
+{
+	int i = x+5; int j = y+5;
+	if(i<0 || j<0 || i>10 || j>10) return false;
+	if(points[y+5][x+5]==10) return false;
+	else return true;
+}
 // insert in format y,x as points[2][1] -> 1,2
 

@@ -33,6 +33,10 @@ public:
 	pii convert(int hexagon , int position);
 
 	pii best_ring_place(vector<pair<int,int>> positions);
+
+	int value(int x, int y);
+
+	bool isValid(int x, int y);
 	//gives best ring position to place 
 
 
