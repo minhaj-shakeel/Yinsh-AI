@@ -13,7 +13,8 @@ struct pair
 };
 struct move
 {
-
+	point start ;
+	point end ;
 };	
 class player
 {
@@ -23,7 +24,9 @@ class player
 	//int rings_y[] = {0,1,1,0,-1,-1};
 	player(int a);
 
-	vector<pair<int ,int> > generate_move(int id = 1, board b); //generate best move
-	void execute_move(pair<int,int> p);
+	vector<move<point,point> > generate_neighbour(int id );
+	move<point,point> generate_move(int id , board b);
+	void player::execute_move(move<point,point> m)
+
 
 };
