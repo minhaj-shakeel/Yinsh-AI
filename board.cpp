@@ -202,10 +202,45 @@ bool board::isEmpty(int x, int y)
 	else return false;
 }
 
-pii board::convert(int hexagon , int position)
-{
-	return hex_to_2d[{hexagon,position}];
-}
+pii board::convert(int hexagon , int position )  //changed convert
+  { int x , y ;
+      if (position <= hexagon)
+      {
+          y = hexagon ;
+          x = position ;
+      }
+      else if (position <= 2*hexagon)
+      {
+          x = hexagon ;
+          y = 2*hexagon - position ;
+      }
+      else if (position <= 3*hexagon)
+      {
+          x = 3*hexagon - position ;
+          y = -1*(position - 2*hexagon) ;
+      }
+       else if (position <= 4*hexagon)
+      {
+          y = -1*hexagon  ;
+          x = -1*(position - 3*hexagon) ;
+      }
+       else if (position <= 5*hexagon)
+      {
+          x = -1*hexagon  ;
+          y = -1*(5*hexagon-position) ;
+      }
+      else
+      {
+          y = position - 5*hexagon ;
+          x = -1*(hexagon-y);
+      }
+      pii ans ;
+
+      ans.F = x  ;
+      ans.S = y ;  
+      return ans ; 
+  }
+
 
 int board::value(int x, int y)
 {
@@ -272,7 +307,7 @@ vector< std::vector<pair<pii,pii> > > board::find_row()
 
 
 
-pii board::to_hexagon(int x , int y )
+	
   {
       int hexagon ;
       int position ;
