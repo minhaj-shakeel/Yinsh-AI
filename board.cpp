@@ -38,7 +38,6 @@ int ver[] = {0,0,1,-1,1,-1};
 
 board::board()
 {
-	initialise();
 	for(int i=0;i<=10;i++){
 		std::vector<int> v;
 		for(int j=0;j<=10;j++){

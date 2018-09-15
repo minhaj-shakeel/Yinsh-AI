@@ -20,8 +20,6 @@ public:
 
 	board(const board &b);
 
-	void initialise();
-
 	void place_ring(int player,int x, int y);
 
 	int move_index(int x1, int y1, int x2, int y2);
@@ -50,6 +48,6 @@ public:
 	//gives best ring position to place 
 
 
-}
+};
 
 #endif
