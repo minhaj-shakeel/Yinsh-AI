@@ -270,5 +270,56 @@ vector< std::vector<pair<pii,pii> > > board::find_row()
 }
 
 
+
+
+pii board::to_hexagon(int x , int y )
+  {
+      int hexagon ;
+      int position ;
+      if (x*y >= 0)
+      {
+          hexagon = max(abs(x),abs(y));
+      }
+      else
+      {
+          hexagon = abs(x) + abs(y);
+      }
+      
+      
+      
+      if (x >=0 && y >= 0)
+      {
+          if (y == hexagon)
+          position = x ;
+          else
+          {
+              position = 2*hexagon - y ;
+          }
+      }
+      if (x >=0 && y < 0)
+      {
+          position = 2*hexagon + abs(y) ;
+      }
+      if (x < 0 && y < 0)
+      {
+          if (abs(y) == hexagon)
+          {
+            position = 3*hexagon + abs(x);
+          }
+          else
+          {
+              position = 5*hexagon+y ;
+          }
+      }
+      if (x < 0 && y >= 0)
+      {
+           position = 5*hexagon+y ;
+      }
+      pii ans ;
+      ans.F =  hexagon ;
+      ans.S =  position ;
+      return ans ;
+  }
+
 // insert in format x,y as points[1][2] -> 1,2
 

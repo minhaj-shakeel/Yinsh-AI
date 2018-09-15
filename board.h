@@ -42,6 +42,7 @@ public:
 
 	bool isValid(int x, int y);
 
+	pii to_hexagon(int x , int y );
 
 	// returns vector of all possible row to be removed for both the players
 	// player1 in v[0] and player2 in v[1]
