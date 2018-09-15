@@ -17,11 +17,11 @@ struct move
 
 class player
 {
-	int id ; //by default player1
-	
-	//int rings_x[] = {0,0,1,1,0,-1 };
-	//int rings_y[] = {0,1,1,0,-1,-1};
-	player(int a);
+	int id ; 
+	player(int a)
+	{
+		id = a ;
+	}
 
 	vector<move<pii,pii> > generate_neighbour(int id );
 	move<pii,pii> generate_move(int id , board b);
@@ -34,3 +34,4 @@ class player
 
 
 };
+#endif 
