@@ -18,21 +18,25 @@ public:
 
 	board();
 
-	board(board b);
+	board(const board &b);
 
-	void place_ring(player,int x, int y);
+	void initialise();
 
-	void move_ring(player, int x1, int y1, int x2, int y2);
+	void place_ring(int player,int x, int y);
+
+	int move_index(int x1, int y1, int x2, int y2);
+
+	void move_ring(int player, int x1, int y1, int x2, int y2);
 
 	void remove_row(int x1, int y1, int x2, int y2);
 
-	void remove_ring(player, int x, int y);
+	void remove_ring(int player, int x, int y);
 
 	bool isEmpty(int x, int y);
 
 	pii convert(int hexagon , int position);
 
-	pii best_ring_place(vector<pair<int,int>> positions);
+	pii best_ring_place(vector<pair<int,int> > positions);
 
 	int value(int x, int y);
 
@@ -46,3 +50,5 @@ public:
 
 
 }
+
+#endif

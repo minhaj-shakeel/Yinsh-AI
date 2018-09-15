@@ -11,7 +11,7 @@ int hor[] = {1,-1,0,0,1,-1};
 int ver[] = {0,0,1,-1,1,-1};
 
 map< pii,pii > hex_to_2d;
-map< pii,pii > 2d_to_hex;
+// map< pii,pii > 2d_to_hex;
 
 pii arr[91] = {
 {0,0},
@@ -22,18 +22,23 @@ pii arr[91] = {
     {}, {1,5},{2,5},{3,5},{4,5}, {},  {5,4},{5,3},{5,2},{5,1}, {},  {4,-1},{3,-2},{2,-3},{1,-4}, {},  {-1,-5},{-2,-5},{-3,-5},{-4,-5}, {},  {-5,-4},{-5,-3},{-5,-2},{-5,-1}, {},  {-4,1},{-3,2},{-2,3},{-1,4}
 };
 
-int count=0;
-hex_to_2d[{0,0}] =arr[count];
-count++;
-for(int i=0;i<=5;i++){
-	for(int j=0;j<=(6*i-1);j++){
-		hex_to_2d[{i,j}] = arr[count];
-		count++;
+
+void board::initialise()
+{
+	int count=0;
+	hex_to_2d[{0,0}] =arr[count];
+	count++;
+	for(int i=0;i<=5;i++){
+		for(int j=0;j<=(6*i-1);j++){
+			hex_to_2d[{i,j}] = arr[count];
+			count++;
+		}
 	}
 }
 
 board::board()
 {
+	initialise();
 	for(int i=0;i<=10;i++){
 		std::vector<int> v;
 		for(int j=0;j<=10;j++){
@@ -50,11 +55,10 @@ board::board()
 					v.pb(-1);
 			}
 			else if(i==5){
-				if(j==0 || j==10){
+				if(j==0 || j==10)
 					v.pb(10);
 				else
 					v.pb(-1);
-				}
 			}
 			else if(i>=6 && i<=9){
 				if(j<i-5)
@@ -73,18 +77,19 @@ board::board()
 	}
 }
 
-board::board(board b)
+board::board(const board &b)
 {
+	initialise();
 	for(int i=0;i<=10;i++){
 		std::vector<int> v;
 		for(int j=0;j<=10;j++){
 			v.pb(b.points[i][j]);
 		}
-		this->points[i].pb(v);
+		this->points.pb(v);
 	}
 }
 
-void board::place_ring(player, int x, int y)
+void board::place_ring(int player, int x, int y)
 {
 	if(player == 1){
 		ring_p1.pb({x,y});
@@ -112,7 +117,7 @@ int board::move_index(int x1, int y1, int x2, int y2)
 	}
 }
 
-void board::move_ring(player, int x1, int y1, int x2, int y2)
+void board::move_ring(int player, int x1, int y1, int x2, int y2)
 {
 	if(player==1){
 		for(int i=0;i<5;i++){
@@ -169,12 +174,12 @@ void board::remove_row(int x1, int y1, int x2, int y2)
 	}
 }
 
-void board::remove_ring(player, int x, int y)
+void board::remove_ring(int player, int x, int y)
 {
 	points[x+5][y+5] = -1;
 	if(player==1){
 		for(int i=0;i<5;i++){
-			if(ring_p1[i].F==x1 && ring_p1[i].S==y1){
+			if(ring_p1[i].F==x && ring_p1[i].S==y){
 				ring_p1[i].F = 100;
 				ring_p1[i].S = 100;
 			}
@@ -182,7 +187,7 @@ void board::remove_ring(player, int x, int y)
 	}
 	else{
 		for(int i=0;i<5;i++){
-			if(ring_p2[i].F==x1 && ring_p2[i].S==y1){
+			if(ring_p2[i].F==x && ring_p2[i].S==y){
 				ring_p2[i].F = 100;
 				ring_p2[i].S = 100;
 			}
@@ -239,7 +244,7 @@ vector< std::vector<pair<pii,pii> > > board::find_row()
 						}
 					}
 					if(rc==5){
-							ans[0].pb({{i,j},{newx,newy}})
+							ans[0].pb({{i,j},{newx,newy}});
 					}
 				}
 			}
@@ -253,7 +258,7 @@ vector< std::vector<pair<pii,pii> > > board::find_row()
 						}
 					}
 					if(rc==5){
-							ans[1].pb({{i,j},{newx,newy}})
+							ans[1].pb({{i,j},{newx,newy}});
 					}
 				}
 
