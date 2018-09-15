@@ -1,2 +1,2 @@
-clean:
-	find . -name '*.pyc' -delete
+compile:
+	board.cpp player.cpp

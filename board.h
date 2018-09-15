@@ -13,8 +13,8 @@ class board
 {
 public:
 	std::vector<std::vector<int> > points;
-	std::vector<pair<int,int> > ring_p1;
-	std::vector<pair<int,int> > ring_p2;
+	std::vector<pii > ring_p1;
+	std::vector<pii > ring_p2;
 
 	board();
 
