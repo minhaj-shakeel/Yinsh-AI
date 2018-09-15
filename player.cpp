@@ -1,5 +1,5 @@
 #include "player.h"
-#include <bits/stdc++.h>
+#include <iostream>
 
 #define pb push_back
 #define F first
@@ -18,18 +18,18 @@ std::vector<std::string> split(const std::string& s, char delimiter)
    }
    return tokens;
 }
-vector<move<point,point> > generate_neighbour(int id )
+vector<move<pii,pii> > generate_neighbour(int id )
 {
 	int direction_x[] = {0,0,1,-1,1,-1};
 	int direction_y[] = {1,-1,0,0,1,-1};
 
-	vector<move<point,point> > neighbours ;
+	vector<move<pii,pii> > neighbours ;
 
-	//starting point should be ring
+	//starting pii should be ring
 	for (int i = 0 ; i < 5 ; i++)
 	{
-		//take a ring point and 
-		pair<int , int > starting ;
+		//take a ring pii and 
+		pii starting ;
 		if (id == 1)
 		{
 			starting = ring_p1.at(i);
@@ -38,12 +38,12 @@ vector<move<point,point> > generate_neighbour(int id )
 		{
 			starting = ring_p2.at(i);
 		}
-		move<point,point> new_move ;  
+		move<pii,pii> new_move ;  
 		new_move.start = starting ;
 		//check it is a valid ring ?
 		if (board::validRing(current)==true) //validring function tellls validity of rings
 		{
-			//then generate termination points
+			//then generate termination piis
 
 			//traverse in 6 directions
 			for(int j = 0 ; j < 6 ; j++)
@@ -53,7 +53,7 @@ vector<move<point,point> > generate_neighbour(int id )
 				int new_y = starting.y + direction_y[j];
 				while(board::isValid(new_x,new_y)==true)
 				{
-					pair<int,int> current ;
+					pii current ;
 					current.x = new_x ;
 					current.y = new_y ;
 					if (isEmpty(new_x , new_y) == true )
@@ -61,14 +61,18 @@ vector<move<point,point> > generate_neighbour(int id )
 						new_move.end = current ;
 						neighbours.push_back(new_move);
 						if (marker_crossed == 1)
+						{
 							break ;
+						}
 
 					}
-					if (board::value(new_x,new_y) == 3 || board::value(new_x,new_y) == 4 ) 
-						break;
-					else if (board::value(new_x,new_y) == 0 || board::value(new_x,new_y) == 1 ) //gives value stored at that point
+					if (board::value(new_x,new_y) == 3 | board::value(new_x,new_y) == 4 ) 
 					{
-
+						break; //ring encountered 
+					}
+					else if (board::value(new_x,new_y) == 0 | board::value(new_x,new_y) == 1 ) 
+					{
+						marker_crossed = 1;
 					}
 					new_x += direction_x[j];
 					new_y += direction_y[j];
@@ -77,16 +81,17 @@ vector<move<point,point> > generate_neighbour(int id )
 			}
 
 		}
+
 	}
 	return neighbours ;
 }
 
 
-string generate_ring_place(int id , board b)
+vector<pii> generate_ring_place(int id , board b)
 {
 	//iterate to all the positions 
-	vector<pair<int,int> > positions ;
-	pair middle ;
+	vector<pii > places ;
+	pii middle ;
 	middle.x = 0;
 	middle.y = 0;
 	
@@ -101,15 +106,22 @@ string generate_ring_place(int id , board b)
 		for (int j = 0 ; j < 6*i < j++)
 		{
 			int position = j ;
-			pair<int, int> current =  board::convert(hexagon,position);
+			pii current =  board::convert(hexagon,position);
 			if (isEmpty(current.x,current.y)== true)
 			{
-				positions.push_back(current);
+				places.push_back(current);
 			}
 		}
 	}
-	pair<int , int> best = board::best_ring_place(positions);
-	pair<int , int> hexa = board::to_hexagon(best.x,best.y); 
+	return places;
+	
+
+}
+
+string best_ring(vector<pii>  )
+{
+	pii best = board::best_ring_place(positions);
+	pii hexa = board::to_hexagon(best.x,best.y); 
 	//to_hexagon converts coordinates in hexagoal format ;
 
 	//generating string format of move ;
@@ -118,9 +130,7 @@ string generate_ring_place(int id , board b)
 	final.append(" ");
 	final.append(to_string(hexa.y));
 	return final;
-
 }
-
 
 
 
@@ -134,7 +144,7 @@ void player::execute_move(int id ,string str)
 	string hexagon = token.at(1);
 	string position  = token.at(2);
 
- 	pair start = board::convert(hexagon,position);
+ 	pii start = board::convert(hexagon,position);
 
 	if (move_type == "P" )
 	{
@@ -153,7 +163,7 @@ void player::execute_move(int id ,string str)
 		string next_step = token.at(3);
 		hexagon = token.at(4);
 		position = token.at(5);
-		pair end = board::convert(hexagon,position);
+		pii end = board::convert(hexagon,position);
 
 
 		if (next_step == "M")
@@ -173,6 +183,10 @@ void player::execute_move(int id ,string str)
 	
 	//check the board
 	board::check_board();
+
+
+
+	
 	
 }
 
