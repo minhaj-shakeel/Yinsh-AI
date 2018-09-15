@@ -201,45 +201,6 @@ bool board::isEmpty(int x, int y)
 	else return false;
 }
 
-pii board::convert(int hexagon , int position )  //changed convert
-  { int x , y ;
-      if (position <= hexagon)
-      {
-          y = hexagon ;
-          x = position ;
-      }
-      else if (position <= 2*hexagon)
-      {
-          x = hexagon ;
-          y = 2*hexagon - position ;
-      }
-      else if (position <= 3*hexagon)
-      {
-          x = 3*hexagon - position ;
-          y = -1*(position - 2*hexagon) ;
-      }
-       else if (position <= 4*hexagon)
-      {
-          y = -1*hexagon  ;
-          x = -1*(position - 3*hexagon) ;
-      }
-       else if (position <= 5*hexagon)
-      {
-          x = -1*hexagon  ;
-          y = -1*(5*hexagon-position) ;
-      }
-      else
-      {
-          y = position - 5*hexagon ;
-          x = -1*(hexagon-y);
-      }
-      pii ans ;
-
-      ans.F = x  ;
-      ans.S = y ;  
-      return ans ; 
-  }
-
 
 int board::value(int x, int y)
 {
@@ -266,20 +227,21 @@ vector< std::vector<pair<pii,pii> > > board::find_row()
 	for(int i=0;i<=10;i++){
 		for(int j=0;j<=10;j++){
 			if(points[i][j]==10) continue;
-			// i is x and j is y
-			newx = i;newy=j;
+			
 			if(points[i][j]==0){
 				for(int a=0;a<=4;a+=2){
 					int rc=1;
+					// i is x and j is y
+					newx = i;newy=j;
 					for(int count=1;count<=4;count++){
 						newx+= hor[a];newy+= ver[a];
-						if(isValid(newx,newy)){
+						if(isValid(newx-5,newy-5)){
 							if(points[newx][newy]==0) rc++;
 						}
 					}
-					if(!(isValid(i-hor[a],j-ver[a])) || !(isValid(newx+hor[a],newy+ver[a])) || (points[i-hor[a]][j-ver[a]] !=0) || (points[newx+hor[a]][newy+ver[a]] !=0) ){
+					if(!(isValid(i-hor[a]-5,j-ver[a]-5)) || !(isValid(newx+hor[a]-5,newy+ver[a]-5)) || (points[i-hor[a]][j-ver[a]] !=0) || (points[newx+hor[a]][newy+ver[a]] !=0) ){
 						if(rc==5){
-							ans[0].pb({{i,j},{newx,newy}});
+							ans[0].pb({{i-5,j-5},{newx-5,newy-5}});
 						}
 					}
 					
@@ -288,15 +250,17 @@ vector< std::vector<pair<pii,pii> > > board::find_row()
 			else if(points[i][j]==1){
 				for(int a=0;a<=4;a+=2){
 					int rc=1;
+					// i is x and j is y
+					newx = i;newy=j;
 					for(int count=1;count<=4;count++){
 						newx+= hor[a];newy+= ver[a];
-						if(isValid(newx,newy)){
+						if(isValid(newx-5,newy-5)){
 							if(points[newx][newy]==1) rc++;
 						}
 					}
-					if(!(isValid(i-hor[a],j-ver[a])) || !(isValid(newx+hor[a],newy+ver[a])) || (points[i-hor[a]][j-ver[a]] !=1) || (points[newx+hor[a]][newy+ver[a]] !=1) ){
+					if(!(isValid(i-hor[a]-5,j-ver[a]-5)) || !(isValid(newx+hor[a]-5,newy+ver[a]-5)) || (points[i-hor[a]][j-ver[a]] !=1) || (points[newx+hor[a]][newy+ver[a]] !=1) ){
 						if(rc==5){
-							ans[1].pb({{i,j},{newx,newy}});
+							ans[1].pb({{i-5,j-5},{newx-5,newy-5}});
 						}
 					}
 				}
@@ -359,6 +323,50 @@ pii board::to_hexagon(int x , int y )
   ans.S =  position ;
   return ans ;
 }
+
+
+
+
+pii board::convert(int hexagon , int position )  //changed convert
+  { 
+  	int x , y ;
+      if (position <= hexagon)
+      {
+          y = hexagon ;
+          x = position ;
+      }
+      else if (position <= 2*hexagon)
+      {
+          x = hexagon ;
+          y = 2*hexagon - position ;
+      }
+      else if (position <= 3*hexagon)
+      {
+          x = 3*hexagon - position ;
+          y = -1*(position - 2*hexagon) ;
+      }
+       else if (position <= 4*hexagon)
+      {
+          y = -1*hexagon  ;
+          x = -1*(position - 3*hexagon) ;
+      }
+       else if (position <= 5*hexagon)
+      {
+          x = -1*hexagon  ;
+          y = -1*(5*hexagon-position) ;
+      }
+      else
+      {
+          y = position - 5*hexagon ;
+          x = -1*(hexagon-y);
+      }
+      pii ans ;
+
+      ans.F = x  ;
+      ans.S = y ;  
+      return ans ; 
+  }
+
 
 // insert in format x,y as points[1][2] -> 1,2
 
