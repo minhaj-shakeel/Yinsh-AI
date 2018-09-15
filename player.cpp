@@ -134,23 +134,39 @@ string best_ring(vector<pii>  )
 
 
 
-void player::execute_move(int id ,string str)
+void player::execute_move(int id ,string str,board b)
 {
-	//check the board 
-	board::check_board();
+	
+	vector< std::vector<pair<pii,pii> > > rows = b.find_row();
+	std::vector<pair<pii,pii> > current_row_list ;
+	if (id == 1)
+		current_row_list = rows.at(0);
+	else
+		current_row_list = rows.at(1);
+	for (int i = 0 ; i < current_row_list.size();i++)
+	{
+		pair<pii,pii> selected_row = current_row_list.at(0) ;
+		//correct the selected row heuristic 
+		b.remove_row(selected_row);
+		//select the ring to remove
+
+		b.remove_ring();
+	}
+
 
 	vector<string> token = split(str,' ');
 	string move_type = token.at(0); 
 	string hexagon = token.at(1);
 	string position  = token.at(2);
 
- 	pii start = board::convert(hexagon,position);
+ 	pii start = b.convert(hexagon,position);
 
 	if (move_type == "P" )
 	{
-		if (board::isEmpty(start.x,start.y) )
+		if (b.isEmpty(start.x,start.y) )
 		{
-			board::place_ring(id , start.x , start.y);
+			b.place_ring(id , start.x , start.y);
+			cout << str << endl ;
 		}
 		else
 		{
@@ -169,6 +185,7 @@ void player::execute_move(int id ,string str)
 		if (next_step == "M")
 		{
 			board::move_ring(id , start.x , start.y , end.x , end.y);
+			cout << str << endl ;
 		}
 		else
 		{
@@ -182,11 +199,25 @@ void player::execute_move(int id ,string str)
 	}
 	
 	//check the board
-	board::check_board();
+	rows = b.find_row();
+	if (id == 1)
+		current_row_list = rows.at(0);
+	else
+		current_row_list = rows.at(1);
+	for (int i = 0 ; i < current_row_list.size();i++)
+	{
+		pair<pii,pii> selected_row = current_row_list.at(0) ;
+		//correct the selected row heuristic 
+		b.remove_row(selected_row);
+		//select the ring to remove
+		
+		b.remove_ring();
+	}
 
 
 
-	
+
+
 	
 }
 
