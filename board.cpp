@@ -10,31 +10,31 @@ using namespace std;
 int hor[] = {1,-1,0,0,1,-1};
 int ver[] = {0,0,1,-1,1,-1};
 
-map< pii,pii > hex_to_2d;
+// map< pii,pii > hex_to_2d;
 // map< pii,pii > 2d_to_hex;
 
-pii arr[91] = {
-{0,0},
-{0,1},{1,1},{1,0},{0,-1},{-1,-1},{-1,0},
-{0,2},{1,2},{2,2},{2,1},{2,0},{1,-1},{0,-2},{-1,-2},{-2,-2},{-2,-1},{-2,0},{-1,1},
-{0,3},{1,3},{2,3},{3,3},{3,2},{3,1},{3,0},{2,-1},{1,-2},{0,-3},{-1,-3},{-2,-3},{-3,-3},{-3,-2},{-3,-1},{-3,0},{-2,1},{-1,2},
-{0,4},{1,4},{2,4},{3,4},{4,4},{4,3},{4,2},{4,1},{4,0},{3,-1},{2,-2},{1,-3},{0,-4},{-1,-4},{-2,-4},{-3,-4},{-4,-4},{-4,-3},{-4,-2},{-4,-1},{-4,0},{-3,1},{-2,2},{-1,3},
-    {}, {1,5},{2,5},{3,5},{4,5}, {},  {5,4},{5,3},{5,2},{5,1}, {},  {4,-1},{3,-2},{2,-3},{1,-4}, {},  {-1,-5},{-2,-5},{-3,-5},{-4,-5}, {},  {-5,-4},{-5,-3},{-5,-2},{-5,-1}, {},  {-4,1},{-3,2},{-2,3},{-1,4}
-};
+// pii arr[91] = {
+// {0,0},
+// {0,1},{1,1},{1,0},{0,-1},{-1,-1},{-1,0},
+// {0,2},{1,2},{2,2},{2,1},{2,0},{1,-1},{0,-2},{-1,-2},{-2,-2},{-2,-1},{-2,0},{-1,1},
+// {0,3},{1,3},{2,3},{3,3},{3,2},{3,1},{3,0},{2,-1},{1,-2},{0,-3},{-1,-3},{-2,-3},{-3,-3},{-3,-2},{-3,-1},{-3,0},{-2,1},{-1,2},
+// {0,4},{1,4},{2,4},{3,4},{4,4},{4,3},{4,2},{4,1},{4,0},{3,-1},{2,-2},{1,-3},{0,-4},{-1,-4},{-2,-4},{-3,-4},{-4,-4},{-4,-3},{-4,-2},{-4,-1},{-4,0},{-3,1},{-2,2},{-1,3},
+//     {}, {1,5},{2,5},{3,5},{4,5}, {},  {5,4},{5,3},{5,2},{5,1}, {},  {4,-1},{3,-2},{2,-3},{1,-4}, {},  {-1,-5},{-2,-5},{-3,-5},{-4,-5}, {},  {-5,-4},{-5,-3},{-5,-2},{-5,-1}, {},  {-4,1},{-3,2},{-2,3},{-1,4}
+// };
 
 
-void board::initialise()
-{
-	int count=0;
-	hex_to_2d[{0,0}] =arr[count];
-	count++;
-	for(int i=0;i<=5;i++){
-		for(int j=0;j<=(6*i-1);j++){
-			hex_to_2d[{i,j}] = arr[count];
-			count++;
-		}
-	}
-}
+// void board::initialise()
+// {
+// 	int count=0;
+// 	hex_to_2d[{0,0}] =arr[count];
+// 	count++;
+// 	for(int i=0;i<=5;i++){
+// 		for(int j=0;j<=(6*i-1);j++){
+// 			hex_to_2d[{i,j}] = arr[count];
+// 			count++;
+// 		}
+// 	}
+// }
 
 board::board()
 {
@@ -278,9 +278,12 @@ vector< std::vector<pair<pii,pii> > > board::find_row()
 							if(points[newx][newy]==0) rc++;
 						}
 					}
-					if(rc==5){
+					if(!(isValid(i-hor[a],j-ver[a])) || !(isValid(newx+hor[a],newy+ver[a])) || (points[i-hor[a]][j-ver[a]] !=0) || (points[newx+hor[a]][newy+ver[a]] !=0) ){
+						if(rc==5){
 							ans[0].pb({{i,j},{newx,newy}});
+						}
 					}
+					
 				}
 			}
 			else if(points[i][j]==1){
@@ -292,8 +295,10 @@ vector< std::vector<pair<pii,pii> > > board::find_row()
 							if(points[newx][newy]==1) rc++;
 						}
 					}
-					if(rc==5){
+					if(!(isValid(i-hor[a],j-ver[a])) || !(isValid(newx+hor[a],newy+ver[a])) || (points[i-hor[a]][j-ver[a]] !=1) || (points[newx+hor[a]][newy+ver[a]] !=1) ){
+						if(rc==5){
 							ans[1].pb({{i,j},{newx,newy}});
+						}
 					}
 				}
 
@@ -308,53 +313,53 @@ vector< std::vector<pair<pii,pii> > > board::find_row()
 
 
 pii board::to_hexagon(int x , int y )	
+{
+  int hexagon ;
+  int position ;
+  if (x*y >= 0)
   {
-      int hexagon ;
-      int position ;
-      if (x*y >= 0)
+      hexagon = max(abs(x),abs(y));
+  }
+  else
+  {
+      hexagon = abs(x) + abs(y);
+  }
+  
+  
+  
+  if (x >=0 && y >= 0)
+  {
+      if (y == hexagon)
+      position = x ;
+      else
       {
-          hexagon = max(abs(x),abs(y));
+          position = 2*hexagon - y ;
+      }
+  }
+  if (x >=0 && y < 0)
+  {
+      position = 2*hexagon + abs(y) ;
+  }
+  if (x < 0 && y < 0)
+  {
+      if (abs(y) == hexagon)
+      {
+        position = 3*hexagon + abs(x);
       }
       else
       {
-          hexagon = abs(x) + abs(y);
+          position = 5*hexagon+y ;
       }
-      
-      
-      
-      if (x >=0 && y >= 0)
-      {
-          if (y == hexagon)
-          position = x ;
-          else
-          {
-              position = 2*hexagon - y ;
-          }
-      }
-      if (x >=0 && y < 0)
-      {
-          position = 2*hexagon + abs(y) ;
-      }
-      if (x < 0 && y < 0)
-      {
-          if (abs(y) == hexagon)
-          {
-            position = 3*hexagon + abs(x);
-          }
-          else
-          {
-              position = 5*hexagon+y ;
-          }
-      }
-      if (x < 0 && y >= 0)
-      {
-           position = 5*hexagon+y ;
-      }
-      pii ans ;
-      ans.F =  hexagon ;
-      ans.S =  position ;
-      return ans ;
   }
+  if (x < 0 && y >= 0)
+  {
+       position = 5*hexagon+y ;
+  }
+  pii ans ;
+  ans.F =  hexagon ;
+  ans.S =  position ;
+  return ans ;
+}
 
 // insert in format x,y as points[1][2] -> 1,2
 
