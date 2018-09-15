@@ -307,7 +307,7 @@ vector< std::vector<pair<pii,pii> > > board::find_row()
 
 
 
-	
+pii board::to_hexagon(int x , int y )	
   {
       int hexagon ;
       int position ;
