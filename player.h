@@ -27,11 +27,11 @@ class player
 		id = a ;
 	}
 
-	vector<pair<pii,pii> > generate_neighbour(int id );
+	vector<string> generate_neighbour(int id ,board b);
 
 	pair<pii,pii> generate_move(int id , board b);
 
-	string generate_ring_place(int id , board b); //generate 
+	vector<string> generate_ring_place(board b); //generate 
 	string generate_ring_move(int id , board b) ;
 
 

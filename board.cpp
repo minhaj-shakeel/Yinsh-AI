@@ -92,8 +92,8 @@ board::board(const board &b)
 		ring_p1.pb(b.ring_p1[i]);
 		ring_p2.pb(b.ring_p2[i]);
 	}
-	r1=0;
-	r2=0;
+	r1=b.r1;
+	r2=b.r2;
 }
 
 void board::place_ring(int player, int x, int y)
@@ -382,8 +382,8 @@ pii board::convert(int hexagon , int position )  //changed convert
 
 pair<double,double> board::score()
 {
-	double sc = 0;
-	int r1=0,r2=0,rnum1=0;,rnum2=0;int np;
+	//double sc = 0;
+	int r1=0,r2=0,rnum1=0 , rnum2=0;int np;
 	for(int i=0;i<=10;i++){
 		for(int j=0;j<=10;j++){
 			np = points[i][j];
@@ -401,7 +401,8 @@ pair<double,double> board::score()
 	r1 = 5-r1;
 	r2 = 5-r2;
 
-	int score1,score2;
+	int score1 = 0 ;
+	int score2 = 0 ;
 	if(r1==3){
 		score1 = 10-r2;
 		score2 = r2;
