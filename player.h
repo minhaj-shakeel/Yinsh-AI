@@ -30,10 +30,14 @@ public:
 
 	vector<string> generate_neighbour(int id ,board& b);
 
-	pair<pii,pii> generate_move(int id , board& b);
+	string generate_move(int id , board& b);
 
 	vector<string> generate_ring_place(board& b); //generate 
-	string generate_ring_move(int id , board& b) ;
+	string generate_ring_move( board& b) ;
+
+	double maxim(int id, board& b, int depth);
+
+	double minim(int next_player, board& b, int depth);
 
 
 	void execute_move(int id ,string str,board& b);

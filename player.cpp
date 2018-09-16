@@ -13,6 +13,28 @@
 #define S second
 using namespace std;
 
+
+int best_depth =4;
+string best_move;
+int num=0;
+
+pii arr[] = {{0,0}, {1,0}, {1,1}, {1,2}, {1,3}, {1,4}, {1,5}, {2,0}, {2,1}, {2,2}};
+string player::generate_ring_move(board& b)
+{
+	string str = "P ";
+	for(int i=0;i<10;i++)
+	{
+		pii cordinate  = b.convert(arr[i].F,arr[i].S); 
+		if(b.isEmpty(cordinate.F,cordinate.S))
+		{
+			str+= to_string(arr[i].F) + " " + to_string(arr[i].S);
+			break;
+		}
+
+	}
+	return str ;
+}
+
 void print_board(board& b)
 {
 	for(int i=0;i<=10;i++){
@@ -393,6 +415,87 @@ vector<string> player::generate_ring_place(board& b)
 // 	finale.append(to_string(hexa.S));
 // 	return finale;
 // }
+
+
+double player::maxim(int id, board& b, int depth)
+{
+	int next_player;
+	if(id==1) next_player=2;
+	else next_player=1;
+
+	double max_score=0.0,present_score;
+
+	if(depth==0){
+		pair<double,double> pr = b.score();
+		if(id==1) present_score = pr.F;
+		else present_score = pr.S;
+		return present_score;
+	}
+
+	vector<string> nb = generate_neighbour(id,b);
+	num = num + nb.size();
+	
+	for(int i=0;i<nb.size();i++){
+		board copy_board(b);
+		execute_move(id,nb[i],copy_board);
+		// present_score = copy_board.score();
+		present_score = minim(next_player,copy_board,depth-1);
+		if(present_score>max_score){
+			best_move = nb[i];
+			max_score = present_score;
+		}
+	}
+	return max_score;
+}
+
+double player::minim(int next_player, board& b, int depth)
+{
+	int id;
+	if(next_player==1) id=2;
+	else id=1;
+
+	double min_score=1000,present_score;
+
+	if(depth==0){
+		pair<double,double> pr = b.score();
+		if(id==1) present_score = pr.F;
+		else present_score = pr.S;
+		return present_score;
+	}
+
+	vector<string> nb = generate_neighbour(next_player,b);
+	num = num + nb.size();
+	// double min_score=100.0,present_score;
+	// string best_move;
+	for(int i=0;i<nb.size();i++){
+		board copy_board(b);
+		execute_move(next_player,nb[i],copy_board);
+		// present_score = copy_board.score();
+		present_score = maxim(id,copy_board,depth-1);
+		if(present_score<min_score){
+			best_move = nb[i];
+			min_score = present_score;
+		}
+	}
+	return min_score;
+}
+
+string player::generate_move(int id, board& b)
+{
+	string str;
+	if(b.flag1==0 && id==1)
+		str = generate_ring_move(b);
+	else if(b.flag2==0 && id==2)
+		str = generate_ring_move(b);
+	else{
+		double dd = maxim(id,b,best_depth);
+		str = best_move;
+		cout<<"fuck"<<best_move<<"  "<< num<< endl;
+
+	}
+
+	return str;
+}
 
 
 

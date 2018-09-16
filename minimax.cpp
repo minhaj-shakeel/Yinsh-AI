@@ -39,7 +39,7 @@ double minim(int next_player, board& b, int depth)
 	if(next_player==1) id=2;
 	else id=1;
 
-	double max_score=0.0,present_score;
+	double min_score=0.0,present_score;
 
 	if(depth==0){
 		pair<double,double> pr = b.score();
