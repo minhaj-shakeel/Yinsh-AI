@@ -85,6 +85,11 @@ board::board(const board &b)
 		}
 		this->points.pb(v);
 	}
+
+	for(int i=0;i<5;i++){
+		b.ring_p1.pb(ring_p1[i]);
+		b.ring_p2.pb(ring_p2[i]);
+	}
 }
 
 void board::place_ring(int player, int x, int y)
@@ -366,6 +371,62 @@ pii board::convert(int hexagon , int position )  //changed convert
   return ans ; 
 }
 
+
+pair<double,double> board::score()
+{
+	double sc = 0;
+	int r1=0,r2=0,rnum1=0;,rnum2=0;int np;
+	for(int i=0;i<=10;i++){
+		for(int j=0;j<=10;j++){
+			np = points[i][j];
+			if(np==3) 
+				r1++;
+			else if(np==4) 
+				r2++;
+			else if(np==0)
+				rnum1++;
+			else if(np==1)
+				rnum2++;
+		}
+	}
+
+	int score1,score2;
+	if(r1==3){
+		score1 = 10-r2;
+		score2 = r2;
+	}
+	else if(r2==3){
+		score1 = r1;
+		score2 = 10-r1;
+	}
+	else if(r2==r1){
+		score1 = 5;
+		score2 = 5;
+	}
+	else if(r1-r2==2){
+		score1 = 7;
+		score2 = 3;
+	}
+	else if(r2-r1==2){
+		score1 = 3;
+		score2 = 7;
+	}
+	else if(r1>r2){
+		score1 = 6;
+		score2 = 4;
+	}
+	else if(r2>r1){
+		score1 = 4;
+		score2 = 6;
+	}
+
+	r1 = score1 + (double)rnum1/1000.0;
+	r2 = score2 + (double)rnum2/1000.0;
+
+	pair<double,double> scp;
+	scp.F = r1; scp.S = r2;
+	return scp;
+}
 
 // insert in format x,y as points[1][2] -> 1,2
 

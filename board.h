@@ -47,6 +47,8 @@ public:
 	vector< std::vector<pair<pii,pii> > > find_row();
 	//gives best ring position to place 
 
+	pair<double,double> score();
+
 
 };
 
