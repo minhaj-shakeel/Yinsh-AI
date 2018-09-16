@@ -390,6 +390,9 @@ pair<double,double> board::score()
 		}
 	}
 
+	r1 = 5-r1;
+	r2 = 5-r2;
+
 	int score1,score2;
 	if(r1==3){
 		score1 = 10-r2;
