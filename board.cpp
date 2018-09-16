@@ -87,8 +87,8 @@ board::board(const board &b)
 	}
 
 	for(int i=0;i<5;i++){
-		b.ring_p1.pb(ring_p1[i]);
-		b.ring_p2.pb(ring_p2[i]);
+		ring_p1.pb(b.ring_p1[i]);
+		ring_p2.pb(b.ring_p2[i]);
 	}
 }
 
