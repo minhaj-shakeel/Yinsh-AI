@@ -70,11 +70,11 @@ vector<pair<pii,pii> > generate_neighbour(int id ,board b)
 						}
 
 					}
-					if (b.value(new_x,new_y) == 3 | b.value(new_x,new_y) == 4 ) 
+					if (b.value(new_x,new_y) == 3 || b.value(new_x,new_y) == 4 ) 
 					{
 						break; //ring encountered 
 					}
-					else if (b.value(new_x,new_y) == 0 | b.value(new_x,new_y) == 1 ) 
+					else if (b.value(new_x,new_y) == 0 || b.value(new_x,new_y) == 1 ) 
 					{
 						marker_crossed = 1;
 					}
@@ -104,11 +104,15 @@ vector<pii> generate_ring_place(int id , board b)
 	{
 		places.push_back(middle);
 	}
+
+	// 5 0 is invalid move so check that
+	// added statement for invalid check for hexagon 5
 	for(int i = 1 ; i <= 5 ; i++ )
 	{
 		int hexagon = i;
 		for (int j = 0 ; j < 6*i ; j++)
 		{
+			if(j%5==0 && i==5) continue;
 			int position = j ;
 			pii current =  b.convert(hexagon,position);
 			if (b.isEmpty(current.F,current.S)== true)
@@ -129,11 +133,11 @@ string best_ring(vector<pii>  positions , board b)
 	
 
 	//generating string format of move ;
-	string  final = "P " ;
-	final.append(to_string(hexa.F));
-	final.append(" ");
-	final.append(to_string(hexa.S));
-	return final;
+	string  finale = "P " ;
+	finale.append(to_string(hexa.F));
+	finale.append(" ");
+	finale.append(to_string(hexa.S));
+	return finale;
 }
 
 
