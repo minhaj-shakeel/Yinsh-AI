@@ -15,6 +15,7 @@ public:
 	std::vector<std::vector<int> > points;
 	std::vector<pii > ring_p1;
 	std::vector<pii > ring_p2;
+	int r1,r2;
 
 	board();
 

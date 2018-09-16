@@ -74,6 +74,8 @@ board::board()
 		}
 		points.pb(v);
 	}
+	r1=0;
+	r2=0;
 }
 
 board::board(const board &b)
@@ -90,16 +92,20 @@ board::board(const board &b)
 		ring_p1.pb(b.ring_p1[i]);
 		ring_p2.pb(b.ring_p2[i]);
 	}
+	r1=0;
+	r2=0;
 }
 
 void board::place_ring(int player, int x, int y)
 {
 	if(player == 1){
 		ring_p1.pb({x,y});
+		r1++;
 		points[x+5][y+5] = 3;
 	}
 	else{
 		ring_p2.pb({x,y});
+		r2++;
 		points[x+5][y+5] = 4;
 	}
 }
@@ -187,6 +193,7 @@ void board::remove_ring(int player, int x, int y)
 				ring_p1[i].S = 100;
 			}
 		}
+		r1--;
 	}
 	else{
 		for(int i=0;i<5;i++){
@@ -195,6 +202,7 @@ void board::remove_ring(int player, int x, int y)
 				ring_p2[i].S = 100;
 			}
 		}
+		r2--;
 	}
 }
 
