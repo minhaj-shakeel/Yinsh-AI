@@ -90,8 +90,14 @@ board::board(const board &b)
 		this->points.pb(v);
 	}
 
-	for(int i=0;i<5;i++){
+	// for(int i=0;i<5;i++){
+	// 	ring_p1.pb(b.ring_p1[i]);
+	// 	ring_p2.pb(b.ring_p2[i]);
+	// }
+	for(int i=0;i<b.ring_p1.size();i++){
 		ring_p1.pb(b.ring_p1[i]);
+	}
+	for(int i=0;i<b.ring_p2.size();i++){
 		ring_p2.pb(b.ring_p2[i]);
 	}
 	r1=b.r1;

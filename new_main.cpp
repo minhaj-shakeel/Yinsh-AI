@@ -1,35 +1,32 @@
 #include "player.h"
 #include "board.h"
 
-void print_board(board& b)
-{
-	for(int i=0;i<=10;i++){
-        for(int j=0;j<=10;j++){
-            if(b.points[i][j]==10){
-
-                cout<<" "<<" ";
-            }
-            else if(b.points[i][j]==-1)
-                cout<<b.points[i][j];
-            else
-            	cout<<" "<<b.points[i][j];
-        }
-        cout<<"\n";
-    }
-}
 
 int main()
 {
 	board b;
 	player p(1);
 
-	p.execute_move(1,"P 0 0" , b);
-	p.execute_move(1,"P 1 0" , b);
-	p.execute_move(1,"P 1 0" , b);
-	p.execute_move(1,"P 0 0" , b);
-	p.execute_move(1,"P 0 0" , b);
-	p.execute_move(1,"P 0 0" , b);
+	p.execute_move(1,"P 1 1" , b);
+	p.execute_move(1,"P 1 2" , b);
+	p.execute_move(1,"P 2 1" , b);
+	p.execute_move(1,"P 3 1" , b);
+	
+	p.execute_move(1,"P 4 0" , b);
+	p.execute_move(1,"S 4 0 M 3 0" , b);
+	p.execute_move(1,"S 3 0 M 2 0" , b);
+	p.execute_move(1,"S 2 0 M 1 0" , b);
+	p.execute_move(1,"S 1 0 M 0 0" , b);
+	print_board(b);
 
+	vector<string>  v = p.generate_neighbour(1 , b);
+	
+
+	//v = b.ring_p1 ;
+	for (int i = 0 ; i < v.size() ; i++)
+	{
+		cout << v.at(i) << endl ;
+	}
 
 	
 	

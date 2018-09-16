@@ -13,6 +13,23 @@
 #define S second
 using namespace std;
 
+void print_board(board& b)
+{
+	for(int i=0;i<=10;i++){
+        for(int j=0;j<=10;j++){
+            if(b.points[i][j]==10){
+
+                cout<<" "<<" ";
+            }
+            else if(b.points[i][j]==-1)
+                cout<<b.points[i][j];
+            else
+            	cout<<" "<<b.points[i][j];
+        }
+        cout<<"\n";
+    }
+}
+
 std::vector<std::string> split(const std::string& s, char delimiter)
 {
    std::vector<std::string> tokens;
@@ -68,9 +85,38 @@ void player::execute_move(int id ,string str,board& b)
 
 
 	vector<string> token = split(str,' ');
-	string move_type = token.at(0); 
-	string hexagon = token.at(1);
-	string position  = token.at(2);
+
+
+				string next_step = token.at(0);
+				int hexagon_start = stoi(token.at(1));
+				int position_start = stoi(token.at(2));
+				int counter = 0;
+				if (next_step == "RS")
+				{
+					int hexagon_end  = stoi(token.at(4));
+					int position_end = stoi(token.at(5));
+					pii row_start , row_end ,ring_remove;
+					row_start = b.convert(hexagon_start,position_start);
+					row_end = b.convert(hexagon_end,position_end);
+					b.remove_row(row_start.F,row_start.S,row_end.F,row_end.S);
+					int ring_hexagon = stoi(token.at(7));
+					int ring_position = stoi(token.at(8));
+					ring_remove = b.convert(ring_hexagon,ring_position);
+					b.remove_ring(id ,ring_remove.F,ring_remove.S);
+					counter += 8 ;
+					
+
+				}
+
+
+
+
+
+
+
+	string move_type = token.at(0+counter); 
+	string hexagon = token.at(1+counter);
+	string position  = token.at(2+counter);
 
  	pii start = b.convert(stoi(hexagon),stoi(position));
 
@@ -89,9 +135,9 @@ void player::execute_move(int id ,string str,board& b)
 	}
 	else if  (move_type == "S" )
 	{
-		string next_step = token.at(3);
-		hexagon = token.at(4);
-		position = token.at(5);
+		string next_step = token.at(3+counter);
+		hexagon = token.at(4+counter);
+		position = token.at(5+counter);
 		pii end = b.convert(stoi(hexagon),stoi(position));
 
 
@@ -100,20 +146,20 @@ void player::execute_move(int id ,string str,board& b)
 			b.move_ring(id , start.F , start.S , end.F , end.S);
 			if (token.size() > 6) 
 			{
-				next_step = token.at(6);
-				int hexagon_start = stoi(token.at(7));
-				int position_start = stoi(token.at(8));
+				next_step = token.at(6+counter);
+				int hexagon_start = stoi(token.at(7+counter));
+				int position_start = stoi(token.at(8+counter));
 
 				if (next_step == "RS")
 				{
-					int hexagon_end  = stoi(token.at(10));
-					int position_end = stoi(token.at(11));
+					int hexagon_end  = stoi(token.at(10+counter));
+					int position_end = stoi(token.at(11+counter));
 					pii row_start , row_end ,ring_remove;
 					row_start = b.convert(hexagon_start,position_start);
 					row_end = b.convert(hexagon_end,position_end);
 					b.remove_row(row_start.F,row_start.S,row_end.F,row_end.S);
-					int ring_hexagon = stoi(token.at(13));
-					int ring_position = stoi(token.at(14));
+					int ring_hexagon = stoi(token.at(13+counter));
+					int ring_position = stoi(token.at(14+counter));
 					ring_remove = b.convert(ring_hexagon,ring_position);
 					b.remove_ring(id ,ring_remove.F,ring_remove.S);
 
@@ -171,34 +217,27 @@ vector<string> player::generate_neighbour(int id ,board& b)
 {
 	int direction_x[] = {0,0,1,-1,1,-1};
 	int direction_y[] = {1,-1,0,0,1,-1};
-	int rings_on_board ;
+	
 
-	board copyboard(b) ;
-
-	if (id == 1)
-	{
-		rings_on_board = b.r1;
-	}
-	else
-		rings_on_board = b.r2 ;
-
+	
 
 	vector<string> neighbours ;
 	if (id == 1)
 	{	
-		if (flag1 == 0 )
+		if (b.flag1 == 0 )
 		{
+			
 			return generate_ring_place(b);
 		}
 	}
 	else
 	{
-		if (flag2 == 0 )
+		if (b.flag2 == 0 )
 		{
 			return generate_ring_place(b);
 		}
 	}
-	string new_move = "";
+	
 
 	//starting pii should be ring
 	for (int i = 0 ; i < 5 ; i++)
@@ -219,11 +258,10 @@ vector<string> player::generate_neighbour(int id ,board& b)
 		{
 			
 			pii initial_hexagon = b.to_hexagon(starting.F,starting.S);
-			new_move += "M";
-			new_move += ( " " + to_string(initial_hexagon.F) + " " + to_string(initial_hexagon.S));
 			//traverse in 6 directions
 			for(int j = 0 ; j < 6 ; j++)
 			{
+				 
 				int marker_crossed = 0; // signifying marker has crossed or not 
 				int new_x = starting.F + direction_x[j];
 				int new_y = starting.S + direction_y[j];
@@ -234,12 +272,21 @@ vector<string> player::generate_neighbour(int id ,board& b)
 					end.S = new_y ;
 					if (b.isEmpty(new_x , new_y) == true )
 					{
+						
 						pii end_hexagon = b.to_hexagon(end.F,end.S);
-						new_move +=  " " + to_string(end_hexagon.F) +" " +  to_string(end_hexagon.S); 
-
+						string new_move = "";
+						new_move += "S";
+						new_move += ( " " + to_string(initial_hexagon.F) + " " + to_string(initial_hexagon.S));
+			
+						new_move +=  " M " + to_string(end_hexagon.F) +" " +  to_string(end_hexagon.S); 
+						
 						//checking the board after this move ;
+						board copyboard(b) ;
 						execute_move(id,new_move,copyboard);
+
+						
 						vector<pair<pii,pii> > sequence = (copyboard.find_row()).at(id-1) ;
+						cout << sequence.size() << endl ;
 						for (int k = 0 ; k < sequence.size() ; k++)
 						{
 							pair<pii,pii> toRemove = sequence.at(k);
@@ -256,13 +303,15 @@ vector<string> player::generate_neighbour(int id ,board& b)
 
 							for(int l = 0 ; l < rings_removed.size() ; l++)
 							{
-								pii current_ring = rings_removed.at(i);
+								pii current_ring = rings_removed.at(l);
 								if (current_ring.F != 100)
 								{
 									pii hexaRing = b.to_hexagon(current_ring.F,current_ring.S);
 									new_move += " " + to_string(hexaRing.F) + " " + to_string(hexaRing.S);
+									break ;
 								}
 							}
+							cout << new_move << endl ;
 
 						}
 

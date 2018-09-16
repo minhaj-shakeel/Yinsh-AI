@@ -40,4 +40,5 @@ public:
 
 
 };
+void print_board(board& b);
 #endif 
