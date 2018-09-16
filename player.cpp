@@ -24,47 +24,47 @@ std::vector<std::string> split(const std::string& s, char delimiter)
    }
    return tokens;
 }
-void player::execute_move(int id ,string str,board b)
+void player::execute_move(int id ,string str,board& b)
 {
 	
-	vector< std::vector<pair<pii,pii> > > rows = b.find_row();
-	std::vector<pair<pii,pii> > current_row_list ;
-	std::vector<pii> ring_list ;
-	if (id == 1)
-	{
-		current_row_list = rows.at(0);
-		ring_list = b.ring_p1 ;
-	}
-	else
-	{
-		current_row_list = rows.at(1);
-		ring_list = b.ring_p2 ;
-	}
-	while (current_row_list.size()> 0)
-	{
-		pair<pii,pii> selected_row = current_row_list.at(0) ;
-		//correct the selected row heuristic 
-		b.remove_row((selected_row.F).F,(selected_row.F).S,(selected_row.S).F,(selected_row.S).S);
+	// vector< std::vector<pair<pii,pii> > > rows = b.find_row();
+	// std::vector<pair<pii,pii> > current_row_list ;
+	// std::vector<pii> ring_list ;
+	// if (id == 1)
+	// {
+	// 	current_row_list = rows.at(0);
+	// 	ring_list = b.ring_p1 ;
+	// }
+	// else
+	// {
+	// 	current_row_list = rows.at(1);
+	// 	ring_list = b.ring_p2 ;
+	// }
+	// while (current_row_list.size()> 0)
+	// {
+	// 	pair<pii,pii> selected_row = current_row_list.at(0) ;
+	// 	//correct the selected row heuristic 
+	// 	b.remove_row((selected_row.F).F,(selected_row.F).S,(selected_row.S).F,(selected_row.S).S);
 		
-		//select the ring to remove
+	// 	//select the ring to remove
 
-		for (int j = 0 ; j < 5 ; j++)
-		{
-			pii currRing = ring_list.at(j);
-			if (currRing.F != 100 && currRing.S != 100)
-			{
-				b.remove_ring(id ,currRing.F,currRing.S);  //reduntant value to current ring is set inside it ;
-				break;
-			}
-		}
+	// 	for (int j = 0 ; j < 5 ; j++)
+	// 	{
+	// 		pii currRing = ring_list.at(j);
+	// 		if (currRing.F != 100 && currRing.S != 100)
+	// 		{
+	// 			b.remove_ring(id ,currRing.F,currRing.S);  //reduntant value to current ring is set inside it ;
+	// 			break;
+	// 		}
+	// 	}
 
-		rows = b.find_row();
-		if (id == 1)
-			current_row_list = rows.at(0);
-		else
-			current_row_list = rows.at(1);
+	// 	rows = b.find_row();
+	// 	if (id == 1)
+	// 		current_row_list = rows.at(0);
+	// 	else
+	// 		current_row_list = rows.at(1);
 
-	}
+	// }
 
 
 	vector<string> token = split(str,' ');
@@ -136,38 +136,38 @@ void player::execute_move(int id ,string str,board b)
 	}
 	
 	//check the board
-	rows = b.find_row();
-	if (id == 1)
-		current_row_list = rows.at(0);
-	else
-		current_row_list = rows.at(1);
-	while (current_row_list.size() > 0)
-	{
-		pair<pii,pii> selected_row = current_row_list.at(0) ;
-		//correct the selected row heuristic 
-		b.remove_row((selected_row.F).F,(selected_row.F).S,(selected_row.S).F,(selected_row.S).S);
-		//select the ring to remove
-		for (int j = 0 ; j < 5 ; j++)
-		{
-			pii currRing = ring_list.at(j);
-			if (currRing.F != 100 && currRing.S != 100)
-			{
-				b.remove_ring(id ,currRing.F,currRing.S); 
-				break;
-			}
-		}
-		//updating rows to remove
-		rows = b.find_row();
-		if (id == 1)
-			current_row_list = rows.at(0);
-		else
-			current_row_list = rows.at(1);
+	// rows = b.find_row();
+	// if (id == 1)
+	// 	current_row_list = rows.at(0);
+	// else
+	// 	current_row_list = rows.at(1);
+	// while (current_row_list.size() > 0)
+	// {
+	// 	pair<pii,pii> selected_row = current_row_list.at(0) ;
+	// 	//correct the selected row heuristic 
+	// 	b.remove_row((selected_row.F).F,(selected_row.F).S,(selected_row.S).F,(selected_row.S).S);
+	// 	//select the ring to remove
+	// 	for (int j = 0 ; j < 5 ; j++)
+	// 	{
+	// 		pii currRing = ring_list.at(j);
+	// 		if (currRing.F != 100 && currRing.S != 100)
+	// 		{
+	// 			b.remove_ring(id ,currRing.F,currRing.S); 
+	// 			break;
+	// 		}
+	// 	}
+	// 	//updating rows to remove
+	// 	rows = b.find_row();
+	// 	if (id == 1)
+	// 		current_row_list = rows.at(0);
+	// 	else
+	// 		current_row_list = rows.at(1);
 
-	}
+	// }
 	
 }
 
-vector<string> player::generate_neighbour(int id ,board b)
+vector<string> player::generate_neighbour(int id ,board& b)
 {
 	int direction_x[] = {0,0,1,-1,1,-1};
 	int direction_y[] = {1,-1,0,0,1,-1};
@@ -184,10 +184,19 @@ vector<string> player::generate_neighbour(int id ,board b)
 
 
 	vector<string> neighbours ;
-	
-	if (rings_on_board < 5 )
+	if (id == 1)
+	{	
+		if (flag1 == 0 )
+		{
+			return generate_ring_place(b);
+		}
+	}
+	else
 	{
-		return generate_ring_place(b);
+		if (flag2 == 0 )
+		{
+			return generate_ring_place(b);
+		}
 	}
 	string new_move = "";
 
@@ -285,24 +294,23 @@ vector<string> player::generate_neighbour(int id ,board b)
 }
 
 
-vector<string> player::generate_ring_place(board b)
+vector<string> player::generate_ring_place(board& b)
 {
-	//iterate to all the positions 
+	
 	vector<string> places ;
-	pii middle ;
-	middle.F = 0;
-	middle.S = 0;
 	string point ;
 
-
+ 	
 	
-		if (b.isEmpty(0,0))
+	if (b.isEmpty(0,0))
 	{
+		
 		point = "P 0 0" ;
 	}
+	
 	places.push_back(point);
-	// 5 0 is invalid move so check that
-	// added statement for invalid check for hexagon 5
+	 //0 is invalid move so check that
+	//added statement for invalid check for hexagon 5
 	for(int i = 1 ; i <= 5 ; i++ )
 	{
 		int hexagon = i;
@@ -312,8 +320,8 @@ vector<string> player::generate_ring_place(board b)
 			pii current =  b.convert(hexagon,position);
 			if (b.isEmpty(current.F,current.S)== true)
 			{   
-				pii hexagon = b.to_hexagon(current.F,current.S); 
-				point =  "P " + to_string(hexagon.F) + " " + to_string(hexagon.S);
+				
+				point =  "P " + to_string(i) + " " + to_string(j);
 				places.push_back(point);
 			}
 		}

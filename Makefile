@@ -17,4 +17,4 @@ board.o : board.cpp board.h
 
 .PHONY: clean
 clean: 
-	$(RM) main_b *.o *~
+	$(RM) new_main *.o *~

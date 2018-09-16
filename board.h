@@ -16,6 +16,7 @@ public:
 	std::vector<pii > ring_p1;
 	std::vector<pii > ring_p2;
 	int r1,r2;
+	int flag1,flag2;
 
 	board();
 

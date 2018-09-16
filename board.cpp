@@ -76,6 +76,8 @@ board::board()
 	}
 	r1=0;
 	r2=0;
+	flag1=0;
+	flag2 = 0;
 }
 
 board::board(const board &b)
@@ -94,6 +96,8 @@ board::board(const board &b)
 	}
 	r1=b.r1;
 	r2=b.r2;
+	flag1 = b.flag1;
+	flag2 = b.flag2;
 }
 
 void board::place_ring(int player, int x, int y)
@@ -102,10 +106,12 @@ void board::place_ring(int player, int x, int y)
 		ring_p1.pb({x,y});
 		r1++;
 		points[x+5][y+5] = 3;
+		if(r1 == 5) flag1 = 1;
 	}
 	else{
 		ring_p2.pb({x,y});
 		r2++;
+		if(r2 == 5) flag2 = 1;
 		points[x+5][y+5] = 4;
 	}
 }

@@ -21,21 +21,22 @@ struct move
 
 class player
 {
+public:
 	int id ; 
 	player(int a)
 	{
 		id = a ;
 	}
 
-	vector<string> generate_neighbour(int id ,board b);
+	vector<string> generate_neighbour(int id ,board& b);
 
-	pair<pii,pii> generate_move(int id , board b);
+	pair<pii,pii> generate_move(int id , board& b);
 
-	vector<string> generate_ring_place(board b); //generate 
-	string generate_ring_move(int id , board b) ;
+	vector<string> generate_ring_place(board& b); //generate 
+	string generate_ring_move(int id , board& b) ;
 
 
-	void execute_move(int id ,string str,board b);
+	void execute_move(int id ,string str,board& b);
 
 
 };
