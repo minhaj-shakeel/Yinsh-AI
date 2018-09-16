@@ -1,4 +1,6 @@
 #include "player.h"
+#include "board.h"
+
 #include <iostream>
 #include <sstream>
 #include <utility>
@@ -21,14 +23,18 @@ std::vector<std::string> split(const std::string& s, char delimiter)
    }
    return tokens;
 }
-vector<pair<pii,pii> > generate_neighbour(int id ,board b)
+vector<string> generate_neighbour(int id ,board b)
 {
 	int direction_x[] = {0,0,1,-1,1,-1};
 	int direction_y[] = {1,-1,0,0,1,-1};
 
+	board copyboard ;
+
 	vector<pair<pii,pii> > neighbours ;
 
-	 pair<pii,pii> new_move ;
+	vector<string> valid_moves ;
+	string new_move ;
+
 	//starting pii should be ring
 	for (int i = 0 ; i < 5 ; i++)
 	{
@@ -42,13 +48,13 @@ vector<pair<pii,pii> > generate_neighbour(int id ,board b)
 		{
 			starting = (b.ring_p2).at(i);
 		}
-  
-		new_move.F = starting ;
+  		
 		//check it is a valid ring ?
-		if (starting.F!=100) //validring function tellls validity of rings
+		if (starting.F!=100) 
 		{
-			//then generate termination piis
-
+			
+			pii initial_hexagon = to_hexagon(starting.F,starting.S);
+			new_move = "M"+ " " + stoi(initial_hexagon.F) + " " + stoi(initial_hexagon.S);
 			//traverse in 6 directions
 			for(int j = 0 ; j < 6 ; j++)
 			{
@@ -57,12 +63,43 @@ vector<pair<pii,pii> > generate_neighbour(int id ,board b)
 				int new_y = starting.S + direction_y[j];
 				while(b.isValid(new_x,new_y)==true)
 				{
-					pii current ;
-					current.F = new_x ;
-					current.S = new_y ;
+					pii end ;
+					end.F = new_x ;
+					end.S = new_y ;
 					if (b.isEmpty(new_x , new_y) == true )
 					{
-						new_move.S = current ;
+						pii end_hexagon = to_hexagon(end.F,end.S);
+						new_move +=  " " + stoi(end_hexagon.F) +" " +  stoi(end_hexagon.S); 
+
+						//checking the board after this move ;
+						execute_move(id,new_move,boardcopy);
+						vector<pair<pii,pii> > sequence = (boardcopy.find_row()).at(id-1) ;
+						for (int k = 0 ; k < sequence.size() ; k++)
+						{
+							pair<pii,pii> toRemove = sequence.at(k);
+							pii hexaStart = to_hexagon((toRemove.F).F,(toRemove.F).S);
+							pii hexaEnd = to_hexagon((toRemove.S).F,(toRemove.S).S);
+							new_move += " RS "  + stoi(hexaStart.F) + " " + stoi(hexaStart.S) + " RE " + stoi(hexaEnd.F) " " + stoi(hexaEnd.S) + " X";
+
+							//possibles ring which could be removed
+							vector<pii> rings_removed ;
+							if (id == 1)
+								rings_removed = copyboard.ring_p1;
+							else
+								rings_removed = copyboard.ring_p2;
+
+							for(int l = 0 ; l < rings_removed.size() ; l++)
+							{
+								pii current_ring = rings_removed.at(i);
+								if (current_ring.F != 100)
+								{
+									pii hexaRing = to_hexagon(current_ring.F,current_ring.S);
+									new_move += " " + stoi(hexaRing.F) + " " + stoi(hexaRing.S);
+								}
+							}
+
+						}
+
 						neighbours.push_back(new_move);
 						if (marker_crossed == 1)
 						{
@@ -158,7 +195,7 @@ void player::execute_move(int id ,string str,board b)
 		current_row_list = rows.at(1);
 		ring_list = b.ring_p2 ;
 	}
-	for (int i = 0 ; i < current_row_list.size();i++)
+	while (current_row_list.size()> 0)
 	{
 		pair<pii,pii> selected_row = current_row_list.at(0) ;
 		//correct the selected row heuristic 
@@ -175,6 +212,13 @@ void player::execute_move(int id ,string str,board b)
 				break;
 			}
 		}
+
+		rows = b.find_row();
+		if (id == 1)
+			current_row_list = rows.at(0);
+		else
+			current_row_list = rows.at(1);
+
 	}
 
 
@@ -228,7 +272,7 @@ void player::execute_move(int id ,string str,board b)
 		current_row_list = rows.at(0);
 	else
 		current_row_list = rows.at(1);
-	for (int i = 0 ; i < current_row_list.size();i++)
+	while (current_row_list.size() > 0)
 	{
 		pair<pii,pii> selected_row = current_row_list.at(0) ;
 		//correct the selected row heuristic 
@@ -243,6 +287,13 @@ void player::execute_move(int id ,string str,board b)
 				break;
 			}
 		}
+		//updating rows to remove
+		rows = b.find_row();
+		if (id == 1)
+			current_row_list = rows.at(0);
+		else
+			current_row_list = rows.at(1);
+
 	}
 
 
@@ -251,4 +302,6 @@ void player::execute_move(int id ,string str,board b)
 
 	
 }
+
+
 
