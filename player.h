@@ -28,6 +28,9 @@ public:
 		id = a ;
 	}
 
+	vector<string> generate_initial_removal(int id ,board& b);
+
+	vector<string> generate_simple_moves(int id ,board& b);
 	vector<string> generate_neighbour(int id ,board& b);
 
 	string generate_move(int id , board& b);

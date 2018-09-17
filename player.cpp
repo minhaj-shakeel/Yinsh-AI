@@ -70,7 +70,8 @@ std::vector<std::string> split(const std::string& s, char delimiter)
 }
 void player::execute_move(int id ,string str,board& b)
 {
-	
+	if (str == "")
+	return ;	
 	// vector< std::vector<pair<pii,pii> > > rows = b.find_row();
 	// std::vector<pair<pii,pii> > current_row_list ;
 	// std::vector<pii> ring_list ;
@@ -116,34 +117,38 @@ void player::execute_move(int id ,string str,board& b)
 
 	vector<string> token = split(str,' ');
 	// print_board(b);
-
-				string next_step = token.at(0);
-				int hexagon_start = stoi(token.at(1));
-				int position_start = stoi(token.at(2));
 				int counter = 0;
-				if (next_step == "RS")
-				{
-					int hexagon_end  = stoi(token.at(4));
-					int position_end = stoi(token.at(5));
+				
+			while ((token.size() > counter) && (token[counter] =="RS") )
+			{	
+				//cout << counter << "token" << endl ;
+				string next_step = token.at(0+counter);
+				int hexagon_start = stoi(token.at(1+counter));
+				int position_start = stoi(token.at(2+counter));
+				
+					int hexagon_end  = stoi(token.at(4+counter));
+					int position_end = stoi(token.at(5+counter));
 					pii row_start , row_end ,ring_remove;
 					row_start = b.convert(hexagon_start,position_start);
 					row_end = b.convert(hexagon_end,position_end);
 					b.remove_row(row_start.F,row_start.S,row_end.F,row_end.S);
-					int ring_hexagon = stoi(token.at(7));
-					int ring_position = stoi(token.at(8));
+					int ring_hexagon = stoi(token.at(7+counter));
+					int ring_position = stoi(token.at(8+counter));
 					ring_remove = b.convert(ring_hexagon,ring_position);
 					b.remove_ring(id ,ring_remove.F,ring_remove.S);
-					counter += 8 ;
+					counter += 9 ;
+					//cout << counter << "counter" << endl ;
 					
 
-				}
+			}
 
 
 
 
 
-
-
+//cout << token.size() << endl ;
+if (token.size() > counter)
+{
 	string move_type = token.at(0+counter); 
 	string hexagon = token.at(1+counter);
 	string position  = token.at(2+counter);
@@ -154,8 +159,9 @@ void player::execute_move(int id ,string str,board& b)
 	{
 		if (b.isEmpty(start.F,start.S) )
 		{
+
 			b.place_ring(id , start.F , start.S);
-			print_board(b);
+			//print_board(b);
 			// cout << str << endl ;
 		}
 		else
@@ -243,15 +249,160 @@ void player::execute_move(int id ,string str,board& b)
 	// }
 	// print_board(b);
 	
+	}
+}
+vector<string> player::generate_initial_removal(int id, board& b)
+{
+	vector<pii> initial_rings ;
+	if (id == 1)
+	{
+		initial_rings = b.ring_p1;
+	}
+	else
+	{
+		initial_rings = b.ring_p2 ;
+	}
+	 vector<pair<pii,pii > > initial_rows =  (b.find_row()).at(id-1);
+	 vector<string> initial_removal; 
+	 vector<string> first ;
+	 //cout << initial_rows.size() << endl ;
+	 for (int i = 0 ; i < initial_rows.size() ; i++)
+	 	{ 
+	 		
+	 			
+
+	 			pair<pii,pii > first_pickup = initial_rows[i] ;
+	 			//cout<<"checkpoint1"<<endl;
+	 			for (int j = 0 ;  j < initial_rings.size() ; j++)
+
+		 				{	
+		 					string prefix = "";
+		 					pii current_ring = initial_rings[j];
+		 					if(current_ring.F!=100)
+							{
+	
+
+							 	pii hexaStart = b.to_hexagon((first_pickup.F).F,(first_pickup.F).S);
+								pii hexaEnd = b.to_hexagon((first_pickup.S).F,(first_pickup.S).S);
+								prefix += "RS "  + to_string(hexaStart.F) + " " + to_string(hexaStart.S) + " RE " + to_string(hexaEnd.F) + " " + to_string(hexaEnd.S) + " X";			
+
+							    pii hexaRing = b.to_hexagon(current_ring.F,current_ring.S);
+								prefix += " " + to_string(hexaRing.F) + " " + to_string(hexaRing.S);
+							
+				    			
+								//prefix += " ";
+								first.push_back(prefix)  ;
+								
+							}
+							
+					    }
+
+
+		}
+		//cout<<"checkpoint2"<<endl;
+		board copy(b);
+		//cout<<"checkpoint3"<<endl;
+		vector<string> second ;
+		for (int i = 0 ; i < first.size(); i++)
+		{
+			//cout<<"checkpoint4"<<first[i]<<endl;
+			execute_move(id,first[i],copy);
+			//cout<<"checkpoint5"<<first[i]<<endl;
+			vector<pair<pii,pii > > remaining_rows =  (copy.find_row()).at(id-1);
+			//cout << remaining_rows.size() << endl ;
+			//cout << first[i] << "first" << endl ;
+			
+			if (id == 1)
+			{
+				initial_rings = copy.ring_p1;
+			}
+			else
+			{
+				initial_rings = copy.ring_p2 ;
+			}
+			if (remaining_rows.size()!=0)	
+			{
+
+		 	     for (int j = 0 ;  j < initial_rings.size() ; j++)
+				 {
+				 		pii current_ring = initial_rings[j];
+		 					if(current_ring.F!=100)
+							{
+			 	
+								string prefix = "";		 					
+		 	     				
+
+					 			pair<pii,pii> initial_marker = remaining_rows[0];
+					
+
+							 	pii hexaStart = b.to_hexagon((initial_marker.F).F,(initial_marker.F).S);
+								pii hexaEnd = b.to_hexagon((initial_marker.S).F,(initial_marker.S).S);
+								prefix += "RS "  + to_string(hexaStart.F) + " " + to_string(hexaStart.S) + " RE " + to_string(hexaEnd.F) + " " + to_string(hexaEnd.S) + " X";
+											
+
+							    pii hexaRing = b.to_hexagon(current_ring.F,current_ring.S);
+								prefix += " " + to_string(hexaRing.F) + " " + to_string(hexaRing.S);
+							
+				    			
+								
+								//cout << prefix << endl ;
+								second.push_back(first[i]+" "+prefix);
+								
+							}
+							
+				    		
+				  }
+			}
+			else
+			{
+				second.push_back(first[i]);
+			}
+		}
+
+		 
+
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+							
+			 	
+
+
+
+			 	
+			
+		
+
+		initial_removal = second;
+		if (initial_removal.size() == 0)
+		{
+			string space = "";
+			initial_removal.push_back(space);
+
+		}
+		return initial_removal;	
 }
 
-vector<string> player::generate_neighbour(int id ,board& b)
+
+
+vector<string> player::generate_simple_moves(int id ,board& b)
 {
 	int direction_x[] = {0,0,1,-1,1,-1};
 	int direction_y[] = {1,-1,0,0,1,-1};
 	
 
-	
 
 	vector<string> neighbours ;
 	if (id == 1)
@@ -270,6 +421,9 @@ vector<string> player::generate_neighbour(int id ,board& b)
 		}
 	}
 	
+		
+
+	 
 
 	//starting pii should be ring
 	for (int i = 0 ; i < 5 ; i++)
@@ -313,46 +467,53 @@ vector<string> player::generate_neighbour(int id ,board& b)
 						new_move +=  " M " + to_string(end_hexagon.F) +" " +  to_string(end_hexagon.S); 
 						
 						//checking the board after this move ;
-						board copyboard(b) ;
-						execute_move(id,new_move,copyboard);
-
+						// board copyboard(b) ;
+						// execute_move(id,new_move,copyboard);
+		
 						
-						vector<pair<pii,pii> > sequence = (copyboard.find_row()).at(id-1) ;
-						// cout << sequence.size() << endl ;
-						string rest = "";
-						for (int k = 0 ; k < sequence.size() ; k++)
-						{
-							pair<pii,pii> toRemove = sequence.at(k);
-							pii hexaStart = b.to_hexagon((toRemove.F).F,(toRemove.F).S);
-							pii hexaEnd = b.to_hexagon((toRemove.S).F,(toRemove.S).S);
-							rest += " RS "  + to_string(hexaStart.F) + " " + to_string(hexaStart.S) + " RE " + to_string(hexaEnd.F) + " " + to_string(hexaEnd.S) + " X";
-							// new_move += " RS "  + to_string(hexaStart.F) + " " + to_string(hexaStart.S) + " RE " + to_string(hexaEnd.F) + " " + to_string(hexaEnd.S) + " X";
+						// vector<pair<pii,pii> > sequence = (copyboard.find_row()).at(id-1) ;
+						// // cout << sequence.size() << endl ;
+						
+						// for (int k = 0 ; k < sequence.size() ; k++)
+						// {
+						// 	// new_move += " RS "  + to_string(hexaStart.F) + " " + to_string(hexaStart.S) + " RE " + to_string(hexaEnd.F) + " " + to_string(hexaEnd.S) + " X";
 
-							//possibles ring which could be removed
-							vector<pii> rings_removed ;
-							if (id == 1)
-								rings_removed = copyboard.ring_p1;
-							else
-								rings_removed = copyboard.ring_p2;
+						// 	//possibles ring which could be removed
+						// 	vector<pii> rings_removed ;
+						// 	if (id == 1)
+						// 		rings_removed = copyboard.ring_p1;
+						// 	else
+						// 		rings_removed = copyboard.ring_p2;
+							
+						// 	for(int l = 0 ; l < rings_removed.size() ; l++)
+						// 	{
 
-							for(int l = 0 ; l < rings_removed.size() ; l++)
-							{
-								pii current_ring = rings_removed.at(l);
-								if (current_ring.F != 100)
-								{
-									pii hexaRing = b.to_hexagon(current_ring.F,current_ring.S);
-									rest += " " + to_string(hexaRing.F) + " " + to_string(hexaRing.S);
-									// new_move += " " + to_string(hexaRing.F) + " " + to_string(hexaRing.S);
-									break ;
-								}
-							}
-							string st = new_move + rest;
-							neighbours.push_back(st);
+						// 		pii current_ring = rings_removed.at(l);
+								
+						// 		if (current_ring.F != 100)
+						// 		{
+						// 			string rest = "";
+						// 			pair<pii,pii> toRemove = sequence.at(k);
+						// 			pii hexaStart = b.to_hexagon((toRemove.F).F,(toRemove.F).S);
+						// 			pii hexaEnd = b.to_hexagon((toRemove.S).F,(toRemove.S).S);
+						// 			rest += " RS "  + to_string(hexaStart.F) + " " + to_string(hexaStart.S) + " RE " + to_string(hexaEnd.F) + " " + to_string(hexaEnd.S) + " X";
+							
+
+						// 			pii hexaRing = b.to_hexagon(current_ring.F,current_ring.S);
+						// 			rest += " " + to_string(hexaRing.F) + " " + to_string(hexaRing.S);
+						// 			// new_move += " " + to_string(hexaRing.F) + " " + to_string(hexaRing.S);
+						// 			string st = new_move + rest;
+						// 			neighbours.push_back(st);
+						// 		}
+						// 	}
+							//string st = new_move + rest;
+							//b.remove_row()
+							//neighbours.push_back(st);
 							// cout << new_move << endl ;
 
-						}
+						// }
 
-						if(sequence.size()==0)
+						// if(sequence.size()==0)
 						neighbours.push_back(new_move);
 						if (marker_crossed == 1)
 						{
@@ -377,9 +538,54 @@ vector<string> player::generate_neighbour(int id ,board& b)
 		}
 
 	}
+	if (neighbours.size() == 0 )
+	{
+		string space = "";
+		neighbours.push_back(space);
+	}
 	return neighbours ;
 }
 
+vector<string> player::generate_neighbour(int id ,board& b)
+{
+	vector<string> ans ;
+	cout << "he" << endl ;
+	vector<string> v = generate_initial_removal(id , b) ;
+	cout << "there" << endl ;
+	
+	for (int  i = 0 ; i < v.size() ; i++)
+	{
+
+		board copy(b);
+		execute_move(id,v[i],copy);
+
+		
+		cout << "rhere" << endl ;
+		vector<string> s = generate_simple_moves(id , copy);
+		cout << "here" << endl ;
+		cout << s.size() << endl ;
+		for (int j = 0 ; j < s.size() ; j++)
+		{
+			
+			  board copy2(copy);
+			  execute_move(id,s[j],copy);
+			  vector<string> r = generate_initial_removal(id,copy2);
+			
+
+			//ans.push_back(v[i]+ " " + s[j]);
+			for (int k = 0 ; k < r.size() ; k++ )
+			{
+				
+				if (v[i]!= "")
+					ans.push_back(v[i]+ " " + s[j] + " " +r[k]);
+				else
+					ans.push_back(s[j] + " " +r[k]);
+			}
+		}
+	}
+
+	return ans ;
+}
 
 vector<string> player::generate_ring_place(board& b)
 {
@@ -517,10 +723,6 @@ string player::generate_move(int id, board& b)
 
 	return str;
 }
-
-
-
-
 
 
 
