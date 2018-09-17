@@ -7,14 +7,17 @@
 #include <utility>
 #include <algorithm>
 #include <vector>
+#include <fstream>
 
 #define pb push_back
 #define F first
 #define S second
 using namespace std;
 
+ofstream outputfile("out.txt");
 
-int best_depth =4;
+
+int best_depth =3;
 string best_move;
 int num=0;
 
@@ -22,6 +25,7 @@ pii arr[] = {{0,0}, {1,0}, {1,1}, {1,2}, {1,3}, {1,4}, {1,5}, {2,0}, {2,1}, {2,2
 string player::generate_ring_move(board& b)
 {
 	string str = "P ";
+	outputfile <<str<<endl;
 	for(int i=0;i<10;i++)
 	{
 		pii cordinate  = b.convert(arr[i].F,arr[i].S); 
@@ -32,6 +36,7 @@ string player::generate_ring_move(board& b)
 		}
 
 	}
+	outputfile << str<<endl;
 	return str ;
 }
 
@@ -41,14 +46,14 @@ void print_board(board& b)
         for(int j=0;j<=10;j++){
             if(b.points[i][j]==10){
 
-                cout<<" "<<" ";
+                outputfile<<" "<<" ";
             }
             else if(b.points[i][j]==-1)
-                cout<<b.points[i][j];
+                outputfile<<b.points[i][j];
             else
-            	cout<<" "<<b.points[i][j];
+            	outputfile<<" "<<b.points[i][j];
         }
-        cout<<"\n";
+        outputfile<<"\n";
     }
 }
 
@@ -105,9 +110,12 @@ void player::execute_move(int id ,string str,board& b)
 
 	// }
 
+	outputfile<<"execute_move:"<<str<<endl;
+
+	// print_board(b);
 
 	vector<string> token = split(str,' ');
-
+	// print_board(b);
 
 				string next_step = token.at(0);
 				int hexagon_start = stoi(token.at(1));
@@ -147,11 +155,12 @@ void player::execute_move(int id ,string str,board& b)
 		if (b.isEmpty(start.F,start.S) )
 		{
 			b.place_ring(id , start.F , start.S);
-			cout << str << endl ;
+			print_board(b);
+			// cout << str << endl ;
 		}
 		else
 		{
-			cout << "non empty position" << endl ;
+			// cout << "non empty position" << endl ;
 			return ;
 		}
 	}
@@ -185,22 +194,22 @@ void player::execute_move(int id ,string str,board& b)
 					ring_remove = b.convert(ring_hexagon,ring_position);
 					b.remove_ring(id ,ring_remove.F,ring_remove.S);
 
-					cout << str << endl ;
+					// cout << str << endl ;
 
 				}
 
 			}
- 			cout << str << endl ;
+ 			// cout << str << endl ;
 		}
 		else
 		{
-			cout << "invalid move" << endl ;
+			// cout << "invalid move" << endl ;
 		}
 
 	}
 	else
 	{
-		cout << "invalid move " << endl ;
+		// cout << "invalid move " << endl ;
 	}
 	
 	//check the board
@@ -232,6 +241,7 @@ void player::execute_move(int id ,string str,board& b)
 	// 		current_row_list = rows.at(1);
 
 	// }
+	// print_board(b);
 	
 }
 
@@ -308,13 +318,15 @@ vector<string> player::generate_neighbour(int id ,board& b)
 
 						
 						vector<pair<pii,pii> > sequence = (copyboard.find_row()).at(id-1) ;
-						cout << sequence.size() << endl ;
+						// cout << sequence.size() << endl ;
+						string rest = "";
 						for (int k = 0 ; k < sequence.size() ; k++)
 						{
 							pair<pii,pii> toRemove = sequence.at(k);
 							pii hexaStart = b.to_hexagon((toRemove.F).F,(toRemove.F).S);
 							pii hexaEnd = b.to_hexagon((toRemove.S).F,(toRemove.S).S);
-							new_move += " RS "  + to_string(hexaStart.F) + " " + to_string(hexaStart.S) + " RE " + to_string(hexaEnd.F) + " " + to_string(hexaEnd.S) + " X";
+							rest += " RS "  + to_string(hexaStart.F) + " " + to_string(hexaStart.S) + " RE " + to_string(hexaEnd.F) + " " + to_string(hexaEnd.S) + " X";
+							// new_move += " RS "  + to_string(hexaStart.F) + " " + to_string(hexaStart.S) + " RE " + to_string(hexaEnd.F) + " " + to_string(hexaEnd.S) + " X";
 
 							//possibles ring which could be removed
 							vector<pii> rings_removed ;
@@ -329,14 +341,18 @@ vector<string> player::generate_neighbour(int id ,board& b)
 								if (current_ring.F != 100)
 								{
 									pii hexaRing = b.to_hexagon(current_ring.F,current_ring.S);
-									new_move += " " + to_string(hexaRing.F) + " " + to_string(hexaRing.S);
+									rest += " " + to_string(hexaRing.F) + " " + to_string(hexaRing.S);
+									// new_move += " " + to_string(hexaRing.F) + " " + to_string(hexaRing.S);
 									break ;
 								}
 							}
-							cout << new_move << endl ;
+							string st = new_move + rest;
+							neighbours.push_back(st);
+							// cout << new_move << endl ;
 
 						}
 
+						if(sequence.size()==0)
 						neighbours.push_back(new_move);
 						if (marker_crossed == 1)
 						{
@@ -423,7 +439,7 @@ double player::maxim(int id, board& b, int depth)
 	if(id==1) next_player=2;
 	else next_player=1;
 
-	double max_score=0.0,present_score;
+	double max_score= -100.0,present_score;
 
 	if(depth==0){
 		pair<double,double> pr = b.score();
@@ -441,7 +457,9 @@ double player::maxim(int id, board& b, int depth)
 		// present_score = copy_board.score();
 		present_score = minim(next_player,copy_board,depth-1);
 		if(present_score>max_score){
-			best_move = nb[i];
+			if(depth==best_depth)
+				best_move = nb[i];
+			outputfile<<best_move<<"bestbest"<<endl;
 			max_score = present_score;
 		}
 	}
@@ -473,7 +491,7 @@ double player::minim(int next_player, board& b, int depth)
 		// present_score = copy_board.score();
 		present_score = maxim(id,copy_board,depth-1);
 		if(present_score<min_score){
-			best_move = nb[i];
+			// best_move = nb[i];
 			min_score = present_score;
 		}
 	}
@@ -483,6 +501,7 @@ double player::minim(int next_player, board& b, int depth)
 string player::generate_move(int id, board& b)
 {
 	string str;
+	outputfile<<"start"<<endl;
 	if(b.flag1==0 && id==1)
 		str = generate_ring_move(b);
 	else if(b.flag2==0 && id==2)
@@ -490,9 +509,11 @@ string player::generate_move(int id, board& b)
 	else{
 		double dd = maxim(id,b,best_depth);
 		str = best_move;
-		cout<<"fuck"<<best_move<<"  "<< num<< endl;
+		// cout<<"fuck"<<best_move<<"  "<< num<< endl;
 
 	}
+
+	outputfile<<str<<endl;
 
 	return str;
 }
