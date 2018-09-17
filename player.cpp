@@ -46,14 +46,14 @@ void print_board(board& b)
         for(int j=0;j<=10;j++){
             if(b.points[i][j]==10){
 
-                outputfile<<" "<<" ";
+                cout<<" "<<" ";
             }
             else if(b.points[i][j]==-1)
-                outputfile<<b.points[i][j];
+                cout<<b.points[i][j];
             else
-            	outputfile<<" "<<b.points[i][j];
+            	cout<<" "<<b.points[i][j];
         }
-        outputfile<<"\n";
+        cout<<"\n";
     }
 }
 
@@ -549,9 +549,9 @@ vector<string> player::generate_simple_moves(int id ,board& b)
 vector<string> player::generate_neighbour(int id ,board& b)
 {
 	vector<string> ans ;
-	cout << "he" << endl ;
+	//cout << "he" << endl ;
 	vector<string> v = generate_initial_removal(id , b) ;
-	cout << "there" << endl ;
+	//cout << "there" << endl ;
 	
 	for (int  i = 0 ; i < v.size() ; i++)
 	{
@@ -560,22 +560,22 @@ vector<string> player::generate_neighbour(int id ,board& b)
 		execute_move(id,v[i],copy);
 
 		
-		cout << "rhere" << endl ;
+		//cout << "rhere" << endl ;
 		vector<string> s = generate_simple_moves(id , copy);
-		cout << "here" << endl ;
+		//cout << "here" << endl ;
 		cout << s.size() << endl ;
 		for (int j = 0 ; j < s.size() ; j++)
 		{
-			
+			//cout << s[j] << "simple move" << endl ;
 			  board copy2(copy);
-			  execute_move(id,s[j],copy);
+			  execute_move(id,s[j],copy2);
 			  vector<string> r = generate_initial_removal(id,copy2);
-			
+			//print_board(copy2);
 
 			//ans.push_back(v[i]+ " " + s[j]);
 			for (int k = 0 ; k < r.size() ; k++ )
 			{
-				
+				//cout << r[k] << "removal" << endl ;
 				if (v[i]!= "")
 					ans.push_back(v[i]+ " " + s[j] + " " +r[k]);
 				else
