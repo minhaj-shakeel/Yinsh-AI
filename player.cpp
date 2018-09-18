@@ -184,7 +184,7 @@ if (token.size() > counter)
 			// print_board(b);
 			// cout <<  "inside" << endl ;
 			// cout << start.F << start.S << end.F << end.S << "here" << endl ;
-			if (token.size() > 6) 
+			if (token.size() > 6+counter) 
 			{
 				next_step = token.at(6+counter);
 				int hexagon_start = stoi(token.at(7+counter));
@@ -566,7 +566,7 @@ vector<string> player::generate_neighbour(int id ,board& b)
 		//cout << "rhere" << endl ;
 		vector<string> s = generate_simple_moves(id , copy);
 		//cout << "here" << endl ;
-		// cout << s.size() << endl ;
+		// cout << s.size(  ) << endl ;
 		for (int j = 0 ; j < s.size() ; j++)
 		{
 			//cout << s[j] << "simple move" << endl ;
