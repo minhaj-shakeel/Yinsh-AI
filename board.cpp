@@ -5,6 +5,7 @@
 #define F first
 #define S second
 #define pii pair<int,int>
+#define endl '\n'
 using namespace std;
 
 int hor[] = {1,-1,0,0,1,-1};
@@ -138,34 +139,69 @@ int board::move_index(int x1, int y1, int x2, int y2)
 	}
 }
 
+void board::printb()
+{
+	for(int i=0;i<=10;i++){
+        for(int j=0;j<=10;j++){
+            if(points[i][j]==10){
+
+                cout<<" "<<" ";
+            }
+            else if(points[i][j]==-1)
+                cout<<points[i][j];
+            else
+            	cout<<" "<<points[i][j];
+        }
+        cout<<"\n";
+    }
+}
+
 void board::move_ring(int player, int x1, int y1, int x2, int y2)
 {
+
+	// printb();
+    // cout<<"testingstart"<<endl;
 	if(player==1){
 		for(int i=0;i<5;i++){
 			if(ring_p1[i].F==x1 && ring_p1[i].S==y1){
 				ring_p1[i].F = x2;
 				ring_p1[i].S = y2;
+				break;
 			}
 		}
 		points[x1+5][y1+5] = 0;
 		points[x2+5][y2+5] = 3;
 	}
 	else{
+		// printb();
+		// cout<<"bfore"<<endl;
 		for(int i=0;i<5;i++){
 			if(ring_p2[i].F==x1 && ring_p2[i].S==y1){
 				ring_p2[i].F = x2;
 				ring_p2[i].S = y2;
+				// cout << "index" << i << endl ;
+				break;
 			}
 		}
+		// printb();
 		points[x1+5][y1+5] = 1;
 		points[x2+5][y2+5] = 4;
+
+		// printb();
+		// cout<<"player2"<<endl;
 	}
+
+	// printb();
+    // cout<<"baaaaahaaaaaar"<<endl;
 
 	int a = move_index(x1,y1,x2,y2);
 
 	int s1 = x1; int e1 = y1;
 	s1+= hor[a]; e1+= ver[a];
+	// cout<<"s1"<<s1<<"e1"<<e1<<endl;
+	// cout<<"x2"<<x2<<"y2"<<y2<<endl;
 	while(s1!=x2 || e1!=y2){
+		// cout<<"andaaaaaaaaaaar"<<endl;
 		if(points[s1+5][e1+5]==-1){
 			s1+= hor[a]; e1+= ver[a];
 			continue;
@@ -175,6 +211,10 @@ void board::move_ring(int player, int x1, int y1, int x2, int y2)
 			s1+= hor[a]; e1+= ver[a];
 		}
 	}
+
+
+	// printb();
+    // cout<<"testing"<<endl;
 
 
 
@@ -395,6 +435,7 @@ pii board::convert(int hexagon , int position )  //changed convert
 pair<double,double> board::score()
 {
 	//double sc = 0;
+	double finr1,finr2;
 	int r1=0,r2=0,rnum1=0 , rnum2=0;int np;
 	for(int i=0;i<=10;i++){
 		for(int j=0;j<=10;j++){
@@ -444,11 +485,11 @@ pair<double,double> board::score()
 		score2 = 6;
 	}
 
-	r1 = score1 + (double)rnum1/1000.0;
-	r2 = score2 + (double)rnum2/1000.0;
+	finr1 = (double)score1 + rnum1/1000.0;
+	finr2 = (double)score2 + rnum2/1000.0;
 
 	pair<double,double> scp;
-	scp.F = r1; scp.S = r2;
+	scp.F = finr1; scp.S = finr2;
 	return scp;
 }
 

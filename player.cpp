@@ -17,7 +17,7 @@ using namespace std;
 ofstream outputfile("out.txt");
 
 
-int best_depth =3;
+int best_depth =1;
 string best_move;
 int num=0;
 
@@ -181,6 +181,9 @@ if (token.size() > counter)
 		if (next_step == "M")
 		{
 			b.move_ring(id , start.F , start.S , end.F , end.S);
+			// print_board(b);
+			// cout <<  "inside" << endl ;
+			// cout << start.F << start.S << end.F << end.S << "here" << endl ;
 			if (token.size() > 6) 
 			{
 				next_step = token.at(6+counter);
@@ -563,7 +566,7 @@ vector<string> player::generate_neighbour(int id ,board& b)
 		//cout << "rhere" << endl ;
 		vector<string> s = generate_simple_moves(id , copy);
 		//cout << "here" << endl ;
-		cout << s.size() << endl ;
+		// cout << s.size() << endl ;
 		for (int j = 0 ; j < s.size() ; j++)
 		{
 			//cout << s[j] << "simple move" << endl ;
@@ -713,6 +716,7 @@ string player::generate_move(int id, board& b)
 	else if(b.flag2==0 && id==2)
 		str = generate_ring_move(b);
 	else{
+		cout << "wecame" << endl ;
 		double dd = maxim(id,b,best_depth);
 		str = best_move;
 		// cout<<"fuck"<<best_move<<"  "<< num<< endl;
@@ -724,5 +728,12 @@ string player::generate_move(int id, board& b)
 	return str;
 }
 
+// string player::truncate(string inp , int t)
+// {
+// 	if (inp.size() > 2)
+// 	{
+// 		if inp.substr(0,2) == "RS";
+// 	}
+// }
 
 

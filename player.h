@@ -45,6 +45,8 @@ public:
 
 	void execute_move(int id ,string str,board& b);
 
+	//vector<string> truncate(vector<string> inp , int t);
+
 
 };
 void print_board(board& b);

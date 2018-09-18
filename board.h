@@ -50,8 +50,11 @@ public:
 	//gives best ring position to place 
 
 	pair<double,double> score();
+	void printb();
 
 
 };
+
+
 
 #endif
