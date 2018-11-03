@@ -11,6 +11,8 @@
 #define pii pair<int,int> 
 using namespace std;
 
+static clock_t start;
+
 struct move
 {
 	pii start ;
@@ -45,6 +47,9 @@ public:
 
 	void execute_move(int id ,string str,board& b);
 
+	double maxnode(int id , board& b , int depth , string& str , double alpha , double beta);
+	double minnode(int id , board& b , int depth , string& str , double alpha , double beta);
+	string minimax(int id , board& b , int depth);
 	//vector<string> truncate(vector<string> inp , int t);
 
 

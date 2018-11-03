@@ -3,11 +3,14 @@
 
 #include <vector>
 #include <utility>
+#include <ctime>
 #define pb push_back
 #define F first
 #define S second
 #define pii pair<int,int>
 using namespace std;
+
+
 
 class board
 {
@@ -50,10 +53,14 @@ public:
 	//gives best ring position to place 
 
 	pair<double,double> score();
+
+	pair<double,double> evaluation();
 	void printb();
 
 
 };
+
+
 
 
 

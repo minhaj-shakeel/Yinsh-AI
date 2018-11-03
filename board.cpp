@@ -485,13 +485,180 @@ pair<double,double> board::score()
 		score2 = 6;
 	}
 
-	finr1 = (double)score1 + rnum1/1000.0;
-	finr2 = (double)score2 + rnum2/1000.0;
+	// cout<<"evaluation"<<endl;
 
+	pair<double,double> db = evaluation();
+
+	// cout<<"after aftyer after"<<endl;
+
+	// cout<<score1<<"   dhfjs  "<<score2<<endl;
+	// cout<<rnum1<<"   dhfjs  "<<rnum2<<endl;
+
+	// finr1 = (double)score1 + rnum1/1000.0;
+	// finr2 = (double)score2 + rnum2/1000.0;
+
+
+	finr1 = (double)score1*100.0 + rnum1/1000.0 + db.F/100.0;
+	finr2 = (double)score2*100.0 + rnum2/1000.0 + db.S/100.0;
 	pair<double,double> scp;
+
+	// cout<<finr1<<"   dhfjs  "<<finr2<<endl;
+
+
 	scp.F = finr1; scp.S = finr2;
 	return scp;
 }
 
-// insert in format x,y as points[1][2] -> 1,2
 
+
+pair<double,double> board::evaluation()
+{
+	int r1=0,r2=0,rnum1=0 , rnum2=0;int np,newx,newy;
+	pair<double,double> db;
+	// cout<< " fucking asshole"<<endl;
+	for(int i=0;i<=10;i++){
+		// cout<<"i"<<"     "<<i<<endl;
+		for(int j=0;j<=10;j++){
+			// cout<<"j"<<"     "<<j<<endl;
+			np = points[i][j];
+			if(np==3){
+				for(int a=0;a<=4;a++){
+					int rc=0;
+					// i is x and j is y
+					newx = i;newy=j;
+					if(!(isValid(newx+hor[a]-5,newy+ver[a]-5))) continue;
+
+					if(points[newx+hor[a]][newy+ver[a]]==0){
+						for(int count=1;count<=4;count++){
+							newx+= hor[a];newy+= ver[a];
+							if(isValid(newx-5,newy-5)){
+								if(points[newx][newy]==0) rc++;
+								else break;
+							}
+						}
+						if(rc==3) r1+=4;
+						else if(rc==4) r1+=5;
+
+					}
+					else if(points[newx+hor[a]][newy+ver[a]]==1){
+						for(int count=1;count<=4;count++){
+							newx+= hor[a];newy+= ver[a];
+							if(isValid(newx-5,newy-5)){
+								if(points[newx][newy]==1) rc++;
+								else break;
+							}
+							if(isValid(newx+hor[a]-5,newy+ver[a]-5)){
+								if(rc==4 && points[newx+hor[a]][newy+ver[a]]==-1) r1+=11;
+								else if(rc==4) r1+=9;
+								else if(rc==3 && points[newx+hor[a]][newy+ver[a]]==-1) r1+=6;
+								else if(rc==3) r1+=4;
+							}
+						}
+
+					}
+
+				}
+			}
+
+			else if(np==4){
+				for(int a=0;a<=4;a++){
+					int rc=0;
+					// i is x and j is y
+					newx = i;newy=j;
+
+					if(!(isValid(newx+hor[a]-5,newy+ver[a]-5))) continue;
+
+					if(points[newx+hor[a]][newy+ver[a]]==1){
+						for(int count=1;count<=4;count++){
+							newx+= hor[a];newy+= ver[a];
+							if(isValid(newx-5,newy-5)){
+								if(points[newx][newy]==1) rc++;
+								else break;
+							}
+						}
+						if(rc==3) r2+=4;
+						else if(rc==4) r2+=5;
+
+					}
+					else if(points[newx+hor[a]][newy+ver[a]]==0){
+						for(int count=1;count<=4;count++){
+							newx+= hor[a];newy+= ver[a];
+							if(isValid(newx-5,newy-5)){
+								if(points[newx][newy]==0) rc++;
+								else break;
+							}
+							if(isValid(newx+hor[a]-5,newy+ver[a]-5)){
+								if(rc==4 && points[newx+hor[a]][newy+ver[a]]==-1) r2+=11;
+								else if(rc==4) r2+=9;
+								else if(rc==3 && points[newx+hor[a]][newy+ver[a]]==-1) r2+=6;
+								else if(rc==3) r2+=4;
+							}
+						}
+
+					}
+
+				}
+				
+			}
+
+			else if(np==0){
+				for(int a=0;a<=4;a+=2){
+					int rc=1;
+					// i is x and j is y
+					newx = i;newy=j;
+
+					if(!(isValid(newx+hor[a]-5,newy+ver[a]-5))) continue;
+
+					if(points[newx+hor[a]][newy+ver[a]]==0){
+						for(int count=1;count<=4;count++){
+							newx+= hor[a];newy+= ver[a];
+							if(isValid(newx-5,newy-5)){
+								if(points[newx][newy]==0) rc++;
+								else break;
+							}
+						}
+						if(rc==3) rnum1+=4;
+						else if(rc==4) rnum1+=5;
+
+					}
+
+				}
+				
+			}
+
+			else if(np==1){
+				for(int a=0;a<=4;a+=2){
+					int rc=1;
+					// i is x and j is y
+					newx = i;newy=j;
+
+					if(!(isValid(newx+hor[a]-5,newy+ver[a]-5))) continue;
+
+					if(points[newx+hor[a]][newy+ver[a]]==1){
+						for(int count=1;count<=4;count++){
+							newx+= hor[a];newy+= ver[a];
+							if(isValid(newx-5,newy-5)){
+								if(points[newx][newy]==0) rc++;
+								else break;
+							}
+						}
+						if(rc==3) rnum2+=4;
+						else if(rc==4) rnum2+=5;
+
+					}
+
+				}
+				
+			}
+		}
+	}
+
+	// cout<<"asshole fuckeddffffffffffffff"<<endl;
+
+	db.F = (double)r1*10.0 + rnum1;
+	db.S = (double)r2*10.0 + rnum2;
+	// cout<<db.F<<"  "<<db.S<<endl;
+	// cout<<r1<<"  "<<r2<<" "<<rnum1<<" "<<rnum2<<endl;
+	return db;
+}
+// insert in format x,y as points[1][2] -> 1,2

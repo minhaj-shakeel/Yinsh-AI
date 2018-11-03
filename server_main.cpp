@@ -1,10 +1,12 @@
 #include "player.h"
 #include "board.h"
 #include <fstream>
+#include <ctime>
 
 using namespace std;
 
-ofstream Out("mainout.txt");
+// ofstream Out("mainout.txt");
+
 
 // Sample C++ Code 
 int main() {
@@ -34,7 +36,11 @@ int main() {
     board b;
 	player p(player_id);
 
-	Out<<"letsgo"<<endl;
+	start = clock();
+
+	// Out<<"letsgo"<<endl;
+
+    
 
     if(player_id == 2) {
         // Get other player's move
@@ -50,7 +56,10 @@ int main() {
             p.id = 2;
             string str = p.generate_move(2,b);
             // str = "P 0 0";
-            Out<<str<<endl;
+            char a = str[str.length()-1];
+            if(isblank(a))
+            str = str.substr(0,str.length()-1);
+            // Out<<str<<"mmmm"<<endl;
             cout<<str<<endl;
 
 
@@ -60,7 +69,7 @@ int main() {
             move.clear();
             while(move.size() == 0)
             getline(cin,move);
-            Out<<move<<endl;
+            // Out<<move<<"move"<<endl;
             p.id = 1;
             p.execute_move(1,move,b);
         }
@@ -74,7 +83,7 @@ int main() {
 
             // str = "P 1 1";
 
-           	Out<<str<<endl;
+           	// Out<<str<<endl;
 
             cout<<str<<endl;
             p.execute_move(1,str,b);
@@ -85,7 +94,7 @@ int main() {
             move.clear();
             while(move.size() == 0)
             getline(cin,move);
-            Out<<"move:"<<move<<endl;
+            // Out<<"move:"<<move<<endl;
             p.id = 2;
             p.execute_move(2,move,b);
         }

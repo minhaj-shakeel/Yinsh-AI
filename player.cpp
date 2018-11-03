@@ -14,18 +14,21 @@
 #define S second
 using namespace std;
 
-ofstream outputfile("out.txt");
+// ofstream outputfile("out.txt");
 
 
-int best_depth =1;
+int best_depth =4;
 string best_move;
 int num=0;
+int movesnum=0;
 
-pii arr[] = {{0,0}, {1,0}, {1,1}, {1,2}, {1,3}, {1,4}, {1,5}, {2,0}, {2,1}, {2,2}};
+// pii arr[] = {{0,0}, {2,0}, {2,1}, {2,2}, {2,3}, {2,4}, {3,12}, {3,2}, {3,10}, {3,1}};
+// pii arr[] = {{0,0}, {1,5}, {1,3}, {1,1}, {2,4}, {2,0}, {2,6}, {1,1}, {1,4}, {4,20}};
+pii arr[] = {{0,0}, {1,0}, {1,3}, {1,1},{1,5}, {1,2}, {1,4}, {2,4}, {2,0}, {2,6}, {3,12}};
 string player::generate_ring_move(board& b)
 {
 	string str = "P ";
-	outputfile <<str<<endl;
+	// outputfile <<str<<endl;
 	for(int i=0;i<10;i++)
 	{
 		pii cordinate  = b.convert(arr[i].F,arr[i].S); 
@@ -36,7 +39,7 @@ string player::generate_ring_move(board& b)
 		}
 
 	}
-	outputfile << str<<endl;
+	// outputfile << str<<endl;
 	return str ;
 }
 
@@ -111,7 +114,7 @@ void player::execute_move(int id ,string str,board& b)
 
 	// }
 
-	outputfile<<"execute_move:"<<str<<endl;
+	// outputfile<<"execute_move:"<<str<<endl;
 
 	// print_board(b);
 
@@ -184,7 +187,7 @@ if (token.size() > counter)
 			// print_board(b);
 			// cout <<  "inside" << endl ;
 			// cout << start.F << start.S << end.F << end.S << "here" << endl ;
-			if (token.size() > 6+counter) 
+			if (token.size() > (6+counter)) 
 			{
 				next_step = token.at(6+counter);
 				int hexagon_start = stoi(token.at(7+counter));
@@ -566,7 +569,7 @@ vector<string> player::generate_neighbour(int id ,board& b)
 		//cout << "rhere" << endl ;
 		vector<string> s = generate_simple_moves(id , copy);
 		//cout << "here" << endl ;
-		// cout << s.size(  ) << endl ;
+		// cout << s.size() << endl ;
 		for (int j = 0 ; j < s.size() ; j++)
 		{
 			//cout << s[j] << "simple move" << endl ;
@@ -648,12 +651,19 @@ double player::maxim(int id, board& b, int depth)
 	if(id==1) next_player=2;
 	else next_player=1;
 
-	double max_score= -100.0,present_score;
+	double max_score= -1000000000.0,present_score;
 
 	if(depth==0){
+
+		// cout<<"    enter enter enter"<<endl;
+		
 		pair<double,double> pr = b.score();
+
+		// cout<<"    exit exit exit"<<endl;
 		if(id==1) present_score = pr.F;
 		else present_score = pr.S;
+
+
 		return present_score;
 	}
 
@@ -662,16 +672,22 @@ double player::maxim(int id, board& b, int depth)
 	
 	for(int i=0;i<nb.size();i++){
 		board copy_board(b);
+		// cout<<"enter execute"<<nb[i]<<"depth"<<depth<<endl;
 		execute_move(id,nb[i],copy_board);
-		// present_score = copy_board.score();
+		// cout<<"exit execute"<<endl;
+
 		present_score = minim(next_player,copy_board,depth-1);
 		if(present_score>max_score){
-			if(depth==best_depth)
+			if(depth==best_depth){
 				best_move = nb[i];
-			outputfile<<best_move<<"bestbest"<<endl;
+			
+				// outputfile<<best_move<<"bestbest"<<endl;
+			}
 			max_score = present_score;
 		}
 	}
+
+	// cout<<"outofmax"<<endl;
 	return max_score;
 }
 
@@ -681,7 +697,7 @@ double player::minim(int next_player, board& b, int depth)
 	if(next_player==1) id=2;
 	else id=1;
 
-	double min_score=1000,present_score;
+	double min_score=1000000000.0,present_score;
 
 	if(depth==0){
 		pair<double,double> pr = b.score();
@@ -692,38 +708,59 @@ double player::minim(int next_player, board& b, int depth)
 
 	vector<string> nb = generate_neighbour(next_player,b);
 	num = num + nb.size();
-	// double min_score=100.0,present_score;
-	// string best_move;
+
 	for(int i=0;i<nb.size();i++){
 		board copy_board(b);
+		// cout<<"enter execute"<<nb[i]<<"depth"<<depth<<endl;
 		execute_move(next_player,nb[i],copy_board);
-		// present_score = copy_board.score();
+		// cout<<"exit execute"<<endl;
 		present_score = maxim(id,copy_board,depth-1);
 		if(present_score<min_score){
 			// best_move = nb[i];
 			min_score = present_score;
 		}
 	}
+	// cout<<"outofmin"<<endl;
 	return min_score;
 }
 
 string player::generate_move(int id, board& b)
 {
 	string str;
-	outputfile<<"start"<<endl;
+	// outputfile<<"start"<<endl;
+	// cout<<"start"<<endl;
 	if(b.flag1==0 && id==1)
 		str = generate_ring_move(b);
 	else if(b.flag2==0 && id==2)
 		str = generate_ring_move(b);
 	else{
-		cout << "wecame" << endl ;
-		double dd = maxim(id,b,best_depth);
-		str = best_move;
-		// cout<<"fuck"<<best_move<<"  "<< num<< endl;
+		// cout << "wecame" << endl ;
+		movesnum++;
+
+		clock_t end = clock();
+		double time_elapsed = (end-start)/(double)CLOCKS_PER_SEC;
+
+
+		if(movesnum<=2) best_depth=3;
+		else if(movesnum<=13) best_depth = 4;
+		else best_depth=4;
+
+		// if(movesnum<=2) best_depth=3;
+		// else if(time_elapsed>=90.0 && time_elapsed<=110.0) best_depth=5;
+		// else if(time_elapsed>=20.0) best_depth=4;
+		// else if(time_elapsed<20.0) best_depth=3;
+		// else best_depth=4;
+
+
+
+
+		str = minimax(id,b,best_depth);
+
+		best_depth = 4;
 
 	}
 
-	outputfile<<str<<endl;
+	// outputfile<<str<<endl;
 
 	return str;
 }
@@ -737,3 +774,124 @@ string player::generate_move(int id, board& b)
 // }
 
 
+
+
+
+
+double player::maxnode(int id , board& b , int depth , string& str , double alpha , double beta)
+{
+	double current_score ;
+	if (depth == 0)
+	{
+		if (id == 1)
+			current_score = b.score().F;
+		else
+			current_score = b.score().S;
+		return current_score ;
+	}
+	else
+	{
+		
+		double max_score = -10000000 ;
+
+		vector<string> moves= generate_neighbour(id , b);
+		num+= moves.size();
+		string best_move =moves[0] ;
+		str =  best_move  ;
+		for (int i = 0 ; i < moves.size() ; i++)
+		{
+			string current_move = moves[i];
+			board copy(b);
+			execute_move(id,current_move,copy);
+			double new_score ;
+			if (id == 1)
+				new_score = minnode(2,copy,depth-1,str , alpha , beta);
+			else
+				new_score = minnode(1,copy,depth-1,str , alpha , beta);
+			if (new_score > max_score)
+			{
+				max_score = new_score;
+				best_move = current_move;
+			}
+			alpha = max(alpha,new_score);
+			str =  best_move  ;
+			if (alpha >= beta)
+				return new_score;
+
+
+		}
+		str =  best_move  ;
+		return max_score ;
+
+
+	}
+	
+
+
+}
+
+double player::minnode(int id , board& b , int depth , string& str , double alpha , double beta)
+{
+	double other_score ;
+	if (depth == 0)
+	{
+		if (id == 2)
+			other_score = b.score().F;
+		else
+			other_score = b.score().S;
+		return other_score ;
+	}
+	else
+	{
+		
+		double min_score = 10000000 ;
+
+		vector<string> moves= generate_neighbour(id , b);
+		num+= moves.size();
+		string best_move =moves[0] ;
+		str = best_move;
+		for (int i = 0 ; i < moves.size() ; i++)
+		{
+			string current_move = moves[i];
+			board copy(b);
+			execute_move(id,current_move,copy);
+			double new_score ;
+			if (id == 1)
+				new_score = maxnode(2,copy,depth-1,str , alpha , beta);
+			else
+				new_score = maxnode(1,copy,depth-1,str , alpha , beta);
+			if (new_score < min_score)
+			{
+				min_score = new_score;
+				best_move = current_move;
+			}
+			beta = min(beta,new_score);
+			str =  best_move  ;
+			if (alpha >= beta)
+				return new_score;
+
+
+		}
+		str =  best_move  ;
+		return min_score ;
+
+
+	}
+	
+
+
+}
+
+string player::minimax(int id , board& b , int depth)
+{
+	string str = "";
+
+	// outputfile<<"move   first"<<str<<endl;
+
+	double a = maxnode(id , b , depth,str , -100000000 , 10000000);
+
+	// outputfile<<"movegenerated"<<str<<endl;
+	// cout<<"visted"<<num<<endl;
+	return str ;
+
+}
