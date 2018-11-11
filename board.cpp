@@ -11,6 +11,10 @@ using namespace std;
 int hor[] = {1,-1,0,0,1,-1};
 int ver[] = {0,0,1,-1,1,-1};
 
+int n = 5;
+int m = 5;
+int kk = 5;
+
 // map< pii,pii > hex_to_2d;
 // map< pii,pii > 2d_to_hex;
 
@@ -37,44 +41,90 @@ int ver[] = {0,0,1,-1,1,-1};
 // 	}
 // }
 
+
+//tbd
 board::board()
 {
-	for(int i=0;i<=10;i++){
-		std::vector<int> v;
-		for(int j=0;j<=10;j++){
-			if(i==0){
-				if(j==0 || j>4)
-					v.pb(10);
-				else
-					v.pb(-1);
+	if(n==5)
+	{
+		for(int i=0;i<=10;i++){
+			std::vector<int> v;
+			for(int j=0;j<=10;j++){
+				if(i==0){
+					if(j==0 || j>4)
+						v.pb(10);
+					else
+						v.pb(-1);
+				}
+				else if(i>=1 && i<=4){
+					if(j>(i+5))
+						v.pb(10);
+					else
+						v.pb(-1);
+				}
+				else if(i==5){
+					if(j==0 || j==10)
+						v.pb(10);
+					else
+						v.pb(-1);
+				}
+				else if(i>=6 && i<=9){
+					if(j<i-5)
+						v.pb(10);
+					else
+						v.pb(-1);
+				}
+				else{
+					if(j==10 || j<=5)
+						v.pb(10);
+					else
+						v.pb(-1);
+				}
 			}
-			else if(i>=1 && i<=4){
-				if(j>(i+5))
-					v.pb(10);
-				else
-					v.pb(-1);
-			}
-			else if(i==5){
-				if(j==0 || j==10)
-					v.pb(10);
-				else
-					v.pb(-1);
-			}
-			else if(i>=6 && i<=9){
-				if(j<i-5)
-					v.pb(10);
-				else
-					v.pb(-1);
-			}
-			else{
-				if(j==10 || j<=5)
-					v.pb(10);
-				else
-					v.pb(-1);
-			}
+			points.pb(v);
 		}
-		points.pb(v);
 	}
+	else if(n==6)
+	{
+		for(int i=0;i<=12;i++){
+			std::vector<int> v;
+			for(int j=0;j<=12;j++){
+				if(i==0){
+					if(j==0 || j>5)
+						v.pb(10);
+					else
+						v.pb(-1);
+				}
+				else if(i>=1 && i<=5){
+					if(j>(i+6))
+						v.pb(10);
+					else
+						v.pb(-1);
+				}
+				else if(i==6){
+					if(j==0 || j==12)
+						v.pb(10);
+					else
+						v.pb(-1);
+				}
+				else if(i>=7 && i<=11){
+					if(j<i-6)
+						v.pb(10);
+					else
+						v.pb(-1);
+				}
+				else{
+					if(j==12 || j<=6)
+						v.pb(10);
+					else
+						v.pb(-1);
+				}
+			}
+			points.pb(v);
+		}
+	}
+
+
 	r1=0;
 	r2=0;
 	flag1=0;
@@ -83,12 +133,24 @@ board::board()
 
 board::board(const board &b)
 {
-	for(int i=0;i<=10;i++){
-		std::vector<int> v;
-		for(int j=0;j<=10;j++){
-			v.pb(b.points[i][j]);
+	if(n==5){
+		for(int i=0;i<=10;i++){
+			std::vector<int> v;
+			for(int j=0;j<=10;j++){
+				v.pb(b.points[i][j]);
+			}
+			this->points.pb(v);
 		}
-		this->points.pb(v);
+	}
+
+	else if(n==6){
+		for(int i=0;i<=12;i++){
+			std::vector<int> v;
+			for(int j=0;j<=12;j++){
+				v.pb(b.points[i][j]);
+			}
+			this->points.pb(v);
+		}
 	}
 
 	// for(int i=0;i<5;i++){
@@ -112,14 +174,14 @@ void board::place_ring(int player, int x, int y)
 	if(player == 1){
 		ring_p1.pb({x,y});
 		r1++;
-		points[x+5][y+5] = 3;
-		if(r1 == 5) flag1 = 1;
+		points[x+n][y+n] = 3;
+		if(r1 == m) flag1 = 1;
 	}
 	else{
 		ring_p2.pb({x,y});
 		r2++;
-		if(r2 == 5) flag2 = 1;
-		points[x+5][y+5] = 4;
+		if(r2 == m) flag2 = 1;
+		points[x+n][y+n] = 4;
 	}
 }
 
@@ -141,19 +203,37 @@ int board::move_index(int x1, int y1, int x2, int y2)
 
 void board::printb()
 {
-	for(int i=0;i<=10;i++){
-        for(int j=0;j<=10;j++){
-            if(points[i][j]==10){
+	if(n==5){
+		for(int i=0;i<=10;i++){
+	        for(int j=0;j<=10;j++){
+	            if(points[i][j]==10){
 
-                cout<<" "<<" ";
-            }
-            else if(points[i][j]==-1)
-                cout<<points[i][j];
-            else
-            	cout<<" "<<points[i][j];
-        }
-        cout<<"\n";
-    }
+	                cout<<" "<<" ";
+	            }
+	            else if(points[i][j]==-1)
+	                cout<<points[i][j];
+	            else
+	            	cout<<" "<<points[i][j];
+	        }
+	        cout<<"\n";
+	    }
+	}
+
+	else if(n==6){
+		for(int i=0;i<=12;i++){
+	        for(int j=0;j<=12;j++){
+	            if(points[i][j]==10){
+
+	                cout<<" "<<" ";
+	            }
+	            else if(points[i][j]==-1)
+	                cout<<points[i][j];
+	            else
+	            	cout<<" "<<points[i][j];
+	        }
+	        cout<<"\n";
+    	}
+	}
 }
 
 void board::move_ring(int player, int x1, int y1, int x2, int y2)
@@ -162,20 +242,20 @@ void board::move_ring(int player, int x1, int y1, int x2, int y2)
 	// printb();
     // cout<<"testingstart"<<endl;
 	if(player==1){
-		for(int i=0;i<5;i++){
+		for(int i=0;i<m;i++){
 			if(ring_p1[i].F==x1 && ring_p1[i].S==y1){
 				ring_p1[i].F = x2;
 				ring_p1[i].S = y2;
 				break;
 			}
 		}
-		points[x1+5][y1+5] = 0;
-		points[x2+5][y2+5] = 3;
+		points[x1+n][y1+n] = 0;
+		points[x2+n][y2+n] = 3;
 	}
 	else{
 		// printb();
 		// cout<<"bfore"<<endl;
-		for(int i=0;i<5;i++){
+		for(int i=0;i<m;i++){
 			if(ring_p2[i].F==x1 && ring_p2[i].S==y1){
 				ring_p2[i].F = x2;
 				ring_p2[i].S = y2;
@@ -184,8 +264,8 @@ void board::move_ring(int player, int x1, int y1, int x2, int y2)
 			}
 		}
 		// printb();
-		points[x1+5][y1+5] = 1;
-		points[x2+5][y2+5] = 4;
+		points[x1+n][y1+n] = 1;
+		points[x2+n][y2+n] = 4;
 
 		// printb();
 		// cout<<"player2"<<endl;
@@ -202,12 +282,12 @@ void board::move_ring(int player, int x1, int y1, int x2, int y2)
 	// cout<<"x2"<<x2<<"y2"<<y2<<endl;
 	while(s1!=x2 || e1!=y2){
 		// cout<<"andaaaaaaaaaaar"<<endl;
-		if(points[s1+5][e1+5]==-1){
+		if(points[s1+n][e1+n]==-1){
 			s1+= hor[a]; e1+= ver[a];
 			continue;
 		}
 		else{
-			points[s1+5][e1+5] = 1-points[s1+5][e1+5];
+			points[s1+n][e1+n] = 1-points[s1+n][e1+n];
 			s1+= hor[a]; e1+= ver[a];
 		}
 	}
@@ -224,34 +304,36 @@ void board::remove_row(int x1, int y1, int x2, int y2)
 {
 	int a = move_index(x1,y1,x2,y2);
 
-	points[x1+5][y1+5] = -1;
-	points[x2+5][y2+5] = -1;
+	points[x1+n][y1+n] = -1;
+	points[x2+n][y2+n] = -1;
 
 	int s1 = x1; int e1 = y1;
 	s1+= hor[a]; e1+= ver[a];
 	while(s1!=x2 || e1!=y2){
-		points[s1+5][e1+5] = -1;
+		points[s1+n][e1+n] = -1;
 		s1+= hor[a]; e1+= ver[a];
 	}
 }
 
 void board::remove_ring(int player, int x, int y)
 {
-	points[x+5][y+5] = -1;
+	points[x+n][y+n] = -1;
 	if(player==1){
-		for(int i=0;i<5;i++){
+		for(int i=0;i<m;i++){
 			if(ring_p1[i].F==x && ring_p1[i].S==y){
 				ring_p1[i].F = 100;
 				ring_p1[i].S = 100;
+				break;
 			}
 		}
 		r1--;
 	}
 	else{
-		for(int i=0;i<5;i++){
+		for(int i=0;i<m;i++){
 			if(ring_p2[i].F==x && ring_p2[i].S==y){
 				ring_p2[i].F = 100;
 				ring_p2[i].S = 100;
+				break;
 			}
 		}
 		r2--;
@@ -261,20 +343,21 @@ void board::remove_ring(int player, int x, int y)
 
 bool board::isEmpty(int x, int y)
 {
-	if(points[x+5][y+5]==-1) return true;
+	if(points[x+n][y+n]==-1) return true;
 	else return false;
 }
 
 
 int board::value(int x, int y)
 {
-	return points[x+5][y+5];
+	return points[x+n][y+n];
 }
+
 
 bool board::isValid(int x, int y)
 {
-	int i = x+5; int j = y+5;
-	if(i<0 || j<0 || i>10 || j>10) return false;
+	int i = x+n; int j = y+n;
+	if(i<0 || j<0 || i>(2*n) || j>(2*n)) return false;
 	if(points[i][j]==10) return false;
 	else return true;
 }
@@ -288,8 +371,8 @@ vector< std::vector<pair<pii,pii> > > board::find_row()
 
 	int newx,newy;
 	// v1 has player1 rows and v2 has player2 rows
-	for(int i=0;i<=10;i++){
-		for(int j=0;j<=10;j++){
+	for(int i=0;i<=(2*n);i++){
+		for(int j=0;j<=(2*n);j++){
 			if(points[i][j]==10) continue;
 			
 			if(points[i][j]==0){
@@ -297,17 +380,17 @@ vector< std::vector<pair<pii,pii> > > board::find_row()
 					int rc=1;
 					// i is x and j is y
 					newx = i;newy=j;
-					for(int count=1;count<=4;count++){
+					for(int count=1;count<=kk-1;count++){
 						newx+= hor[a];newy+= ver[a];
-						if(isValid(newx-5,newy-5)){
+						if(isValid(newx-n,newy-n)){
 							if(points[newx][newy]==0) rc++;
 						}
 					}
-					if(!(isValid(i-hor[a]-5,j-ver[a]-5)) || !(isValid(newx+hor[a]-5,newy+ver[a]-5)) || (points[i-hor[a]][j-ver[a]] !=0) || (points[newx+hor[a]][newy+ver[a]] !=0) ){
-						if(rc==5){
-							ans[0].pb({{i-5,j-5},{newx-5,newy-5}});
+					// if(!(isValid(i-hor[a]-5,j-ver[a]-5)) || !(isValid(newx+hor[a]-5,newy+ver[a]-5)) || (points[i-hor[a]][j-ver[a]] !=0) || (points[newx+hor[a]][newy+ver[a]] !=0) ){
+						if(rc==kk){
+							ans[0].pb({{i-n,j-n},{newx-n,newy-n}});
 						}
-					}
+					// }
 					
 				}
 			}
@@ -316,17 +399,17 @@ vector< std::vector<pair<pii,pii> > > board::find_row()
 					int rc=1;
 					// i is x and j is y
 					newx = i;newy=j;
-					for(int count=1;count<=4;count++){
+					for(int count=1;count<=kk-1;count++){
 						newx+= hor[a];newy+= ver[a];
-						if(isValid(newx-5,newy-5)){
+						if(isValid(newx-n,newy-n)){
 							if(points[newx][newy]==1) rc++;
 						}
 					}
-					if(!(isValid(i-hor[a]-5,j-ver[a]-5)) || !(isValid(newx+hor[a]-5,newy+ver[a]-5)) || (points[i-hor[a]][j-ver[a]] !=1) || (points[newx+hor[a]][newy+ver[a]] !=1) ){
-						if(rc==5){
-							ans[1].pb({{i-5,j-5},{newx-5,newy-5}});
+					// if(!(isValid(i-hor[a]-5,j-ver[a]-5)) || !(isValid(newx+hor[a]-5,newy+ver[a]-5)) || (points[i-hor[a]][j-ver[a]] !=1) || (points[newx+hor[a]][newy+ver[a]] !=1) ){
+						if(rc==kk){
+							ans[1].pb({{i-n,j-n},{newx-n,newy-n}});
 						}
-					}
+					// }
 				}
 
 			}
@@ -437,8 +520,8 @@ pair<double,double> board::score()
 	//double sc = 0;
 	double finr1,finr2;
 	int r1=0,r2=0,rnum1=0 , rnum2=0;int np;
-	for(int i=0;i<=10;i++){
-		for(int j=0;j<=10;j++){
+	for(int i=0;i<=(2*n);i++){
+		for(int j=0;j<=(2*n);j++){
 			np = points[i][j];
 			if(np==3) 
 				r1++;
@@ -451,8 +534,8 @@ pair<double,double> board::score()
 		}
 	}
 
-	r1 = 5-r1;
-	r2 = 5-r2;
+	r1 = m-r1;
+	r2 = m-r2;
 
 	int score1 = 0 ;
 	int score2 = 0 ;
@@ -516,9 +599,9 @@ pair<double,double> board::evaluation()
 	int r1=0,r2=0,rnum1=0 , rnum2=0;int np,newx,newy;
 	pair<double,double> db;
 	// cout<< " fucking asshole"<<endl;
-	for(int i=0;i<=10;i++){
+	for(int i=0;i<=(2*n);i++){
 		// cout<<"i"<<"     "<<i<<endl;
-		for(int j=0;j<=10;j++){
+		for(int j=0;j<=(2*n);j++){
 			// cout<<"j"<<"     "<<j<<endl;
 			np = points[i][j];
 			if(np==3){
@@ -526,32 +609,40 @@ pair<double,double> board::evaluation()
 					int rc=0;
 					// i is x and j is y
 					newx = i;newy=j;
-					if(!(isValid(newx+hor[a]-5,newy+ver[a]-5))) continue;
+					if(!(isValid(newx+hor[a]-n,newy+ver[a]-n))) continue;
 
 					if(points[newx+hor[a]][newy+ver[a]]==0){
-						for(int count=1;count<=4;count++){
+						for(int count=1;count<=kk-1;count++){
 							newx+= hor[a];newy+= ver[a];
-							if(isValid(newx-5,newy-5)){
+							if(isValid(newx-n,newy-n)){
 								if(points[newx][newy]==0) rc++;
 								else break;
 							}
 						}
-						if(rc==3) r1+=4;
-						else if(rc==4) r1+=5;
+						if(rc==kk-1) r1+=39;
+						else if(rc==kk-2) r1+=36;
+						else if(rc==kk-3) r1+=21;
+						else if(rc==kk-4) r1+=11;
+						// if(rc==3) r1+=4;
+						// else if(rc==4) r1+=5;
 
 					}
 					else if(points[newx+hor[a]][newy+ver[a]]==1){
-						for(int count=1;count<=4;count++){
+						for(int count=1;count<=kk-1;count++){
 							newx+= hor[a];newy+= ver[a];
-							if(isValid(newx-5,newy-5)){
+							if(isValid(newx-n,newy-n)){
 								if(points[newx][newy]==1) rc++;
 								else break;
 							}
-							if(isValid(newx+hor[a]-5,newy+ver[a]-5)){
-								if(rc==4 && points[newx+hor[a]][newy+ver[a]]==-1) r1+=11;
-								else if(rc==4) r1+=9;
-								else if(rc==3 && points[newx+hor[a]][newy+ver[a]]==-1) r1+=6;
-								else if(rc==3) r1+=4;
+							if(isValid(newx+hor[a]-n,newy+ver[a]-n)){
+								if(rc==kk-1 && points[newx+hor[a]][newy+ver[a]]==-1) r1+=29;
+								else if(rc==kk-1) r1+=26;
+								else if(rc==kk-2 && points[newx+hor[a]][newy+ver[a]]==-1) r1+=21;
+								else if(rc==kk-2) r1+=19;
+								else if(rc==kk-3 && points[newx+hor[a]][newy+ver[a]]==-1) r1+=16;
+								else if(rc==kk-3) r1+=13;
+								else if(rc==kk-4 && points[newx+hor[a]][newy+ver[a]]==-1) r1+=5;
+								else if(rc==kk-4) r1+=3;
 							}
 						}
 
@@ -566,32 +657,40 @@ pair<double,double> board::evaluation()
 					// i is x and j is y
 					newx = i;newy=j;
 
-					if(!(isValid(newx+hor[a]-5,newy+ver[a]-5))) continue;
+					if(!(isValid(newx+hor[a]-n,newy+ver[a]-n))) continue;
 
 					if(points[newx+hor[a]][newy+ver[a]]==1){
-						for(int count=1;count<=4;count++){
+						for(int count=1;count<=kk-1;count++){
 							newx+= hor[a];newy+= ver[a];
-							if(isValid(newx-5,newy-5)){
+							if(isValid(newx-n,newy-n)){
 								if(points[newx][newy]==1) rc++;
 								else break;
 							}
 						}
-						if(rc==3) r2+=4;
-						else if(rc==4) r2+=5;
+						if(rc==kk-1) r1+=39;
+						else if(rc==kk-2) r1+=36;
+						else if(rc==kk-3) r1+=21;
+						else if(rc==kk-4) r1+=11;
+						// if(rc==3) r2+=4;
+						// else if(rc==4) r2+=5;
 
 					}
 					else if(points[newx+hor[a]][newy+ver[a]]==0){
-						for(int count=1;count<=4;count++){
+						for(int count=1;count<=kk-1;count++){
 							newx+= hor[a];newy+= ver[a];
-							if(isValid(newx-5,newy-5)){
+							if(isValid(newx-n,newy-n)){
 								if(points[newx][newy]==0) rc++;
 								else break;
 							}
-							if(isValid(newx+hor[a]-5,newy+ver[a]-5)){
-								if(rc==4 && points[newx+hor[a]][newy+ver[a]]==-1) r2+=11;
-								else if(rc==4) r2+=9;
-								else if(rc==3 && points[newx+hor[a]][newy+ver[a]]==-1) r2+=6;
-								else if(rc==3) r2+=4;
+							if(isValid(newx+hor[a]-n,newy+ver[a]-n)){
+								if(rc==kk-1 && points[newx+hor[a]][newy+ver[a]]==-1) r1+=29;
+								else if(rc==kk-1) r1+=26;
+								else if(rc==kk-2 && points[newx+hor[a]][newy+ver[a]]==-1) r1+=21;
+								else if(rc==kk-2) r1+=19;
+								else if(rc==kk-3 && points[newx+hor[a]][newy+ver[a]]==-1) r1+=16;
+								else if(rc==kk-3) r1+=13;
+								else if(rc==kk-4 && points[newx+hor[a]][newy+ver[a]]==-1) r1+=5;
+								else if(rc==kk-4) r1+=3;
 							}
 						}
 
@@ -607,18 +706,22 @@ pair<double,double> board::evaluation()
 					// i is x and j is y
 					newx = i;newy=j;
 
-					if(!(isValid(newx+hor[a]-5,newy+ver[a]-5))) continue;
+					if(!(isValid(newx+hor[a]-n,newy+ver[a]-n))) continue;
 
 					if(points[newx+hor[a]][newy+ver[a]]==0){
-						for(int count=1;count<=4;count++){
+						for(int count=1;count<=kk-1;count++){
 							newx+= hor[a];newy+= ver[a];
-							if(isValid(newx-5,newy-5)){
+							if(isValid(newx-n,newy-n)){
 								if(points[newx][newy]==0) rc++;
 								else break;
 							}
 						}
-						if(rc==3) rnum1+=4;
-						else if(rc==4) rnum1+=5;
+						if(rc==kk-1) r1+=36;
+						else if(rc==kk-2) r1+=30;
+						else if(rc==kk-3) r1+=11;
+						else if(rc==kk-4) r1+=4;
+						// if(rc==3) rnum1+=4;
+						// else if(rc==4) rnum1+=5;
 
 					}
 
@@ -632,18 +735,22 @@ pair<double,double> board::evaluation()
 					// i is x and j is y
 					newx = i;newy=j;
 
-					if(!(isValid(newx+hor[a]-5,newy+ver[a]-5))) continue;
+					if(!(isValid(newx+hor[a]-n,newy+ver[a]-n))) continue;
 
 					if(points[newx+hor[a]][newy+ver[a]]==1){
-						for(int count=1;count<=4;count++){
+						for(int count=1;count<=kk-1;count++){
 							newx+= hor[a];newy+= ver[a];
-							if(isValid(newx-5,newy-5)){
+							if(isValid(newx-n,newy-n)){
 								if(points[newx][newy]==0) rc++;
 								else break;
 							}
 						}
-						if(rc==3) rnum2+=4;
-						else if(rc==4) rnum2+=5;
+						if(rc==kk-1) r1+=36;
+						else if(rc==kk-2) r1+=30;
+						else if(rc==kk-3) r1+=11;
+						else if(rc==kk-4) r1+=4;
+						// if(rc==3) rnum2+=4;
+						// else if(rc==4) rnum2+=5;
 
 					}
 
